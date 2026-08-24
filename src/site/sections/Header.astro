@@ -7,11 +7,13 @@
 import Nav from 'ux-design-system/components/Nav.astro';
 import { withBase } from 'ux-design-system/lib/url';
 
+// Les icônes sont des noms, pas des chemins : le système les inline et les livre
+// avec lui. Seuls les href passent encore par withBase(), eux sont des URLs.
 const links = [
-  { href: withBase('/projets'), label: 'Projets', icon: withBase('/icons/box-plus.svg') },
-  { href: withBase('/how-i-work'), label: 'How I work', icon: withBase('/icons/route.svg') },
-  { href: withBase('/about'), label: 'About me', icon: withBase('/icons/circle-face.svg') },
-  { href: withBase('/cv'), label: 'CV', icon: withBase('/icons/file-text.svg') },
+  { href: withBase('/projets'), label: 'Projets', icon: 'box-plus' as const },
+  { href: withBase('/how-i-work'), label: 'How I work', icon: 'route' as const },
+  { href: withBase('/about'), label: 'About me', icon: 'circle-face-content' as const },
+  { href: withBase('/cv'), label: 'CV', icon: 'file-text' as const },
 ];
 
 // Astro.url.pathname porte le préfixe de déploiement, et les liens aussi depuis
@@ -36,7 +38,7 @@ const home = isHome
     links={links}
     current={path}
     home={home}
-    action={{ label: "Let's chat", icon: withBase('/icons/mail-edit.svg') }}
+    action={{ label: "Let's chat", icon: 'mail-edit' }}
   />
 </header>
 
