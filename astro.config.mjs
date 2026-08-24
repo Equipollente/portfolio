@@ -3,10 +3,13 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  // Domaine personnalisé : le site est servi à la racine, pas sous un préfixe.
-  // C'est pourquoi il n'y a pas de `base` ici, contrairement au dépôt du design
-  // system dont la doc vit sous /UX-design-system/.
-  site: 'https://equipollente.org',
+  // Tant que le site n'a pas de domaine propre, GitHub Pages le sert sous le nom
+  // du dépôt. Pour brancher equipollente.org le jour venu, trois gestes : remettre
+  // site: 'https://equipollente.org', supprimer `base`, et reposer public/CNAME
+  // avec le domaine dedans. Aucun autre code ne bouge — withBase() redevient une
+  // fonction identité dès que `base` disparaît.
+  site: 'https://equipollente.github.io',
+  base: '/portfolio',
 
   vite: {
     ssr: {

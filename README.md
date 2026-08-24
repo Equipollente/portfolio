@@ -1,7 +1,7 @@
 # Portfolio — Judith Heckmann
 
 Le portfolio de Judith Heckmann, product designer. Site Astro publié sur
-**<https://equipollente.org>**.
+**<https://equipollente.github.io/portfolio/>**.
 
 > **État : coquille.** Le `Header` est fini ; les cinq pages attendent leurs sections. Le site est
 > volontairement en `Disallow: /` dans [robots.txt](public/robots.txt) tant qu'il n'y a rien à lire —
@@ -46,12 +46,20 @@ site qui décide quelle icône va sur quel onglet.
 
 ## Déploiement
 
-GitHub Pages, à chaque push sur `main`, via [le workflow](.github/workflows/deploy.yml). Le domaine
-`equipollente.org` est déclaré par [public/CNAME](public/CNAME) : le fichier doit rester dans
-`public/` pour être republié à chaque déploiement, sans quoi GitHub perd le domaine.
+GitHub Pages, à chaque push sur `main`, via [le workflow](.github/workflows/deploy.yml).
 
-Le site est servi à la racine du domaine — pas de `base` dans la configuration Astro, contrairement
-au dépôt du design system dont la doc vit sous un préfixe.
+Faute de domaine propre pour l'instant, le site est servi sous le nom du dépôt : `base: '/portfolio'`
+dans la configuration Astro, et **tout chemin absolu passe par `withBase()`** — un `/icons/x.svg`
+laissé tel quel marche en local et renvoie un 404 en ligne.
+
+Le domaine `equipollente.org` est prêt à être branché quand tu voudras. Trois gestes, aucun autre
+code à toucher :
+
+1. `astro.config.mjs` : remettre `site: 'https://equipollente.org'` et **supprimer `base`** —
+   `withBase()` redevient alors une fonction identité.
+2. Recréer `public/CNAME` avec `equipollente.org` dedans (il doit vivre dans `public/` pour être
+   republié à chaque déploiement, sinon GitHub perd le domaine).
+3. Pointer le DNS vers GitHub Pages, en laissant les MX et le SPF intacts.
 
 ## Les maquettes
 

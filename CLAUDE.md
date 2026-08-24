@@ -29,12 +29,17 @@ serait plus un composant.
 
 ## Ce qui casse silencieusement
 
-- **`public/CNAME`** porte le domaine `equipollente.org`. S'il disparaît de `public/`, le prochain
-  déploiement fait perdre le domaine à GitHub Pages.
+- Le site est servi sous `/portfolio/`, pas à la racine d'un domaine. **Tout chemin absolu passe par
+  `withBase()`** (importé de `ux-design-system/lib/url`) : un `/icons/x.svg` laissé tel quel marche en
+  `npm run dev` et renvoie un 404 en ligne. C'est une erreur qui ne se voit pas en développement —
+  seul `npm run build && npm run preview` la montre.
+- Pour la même raison, `Header.astro` compare la page courante à `withBase('/')` et non à `'/'` :
+  sous un préfixe, l'accueil ne se reconnaîtrait pas et proposerait un retour vers lui-même.
 - **`public/robots.txt`** interdit toute indexation tant que les pages sont vides. À retirer quand le
   contenu arrive — sinon le site restera invisible des moteurs sans que rien ne le signale.
-- Le site est servi à la racine du domaine : **pas de `base`** dans `astro.config.mjs`. Le
-  `withBase()` du système renvoie alors les chemins inchangés, il n'y a rien à faire.
+- Le domaine `equipollente.org` n'est pas branché : voir le README pour les trois gestes qui le
+  rebranchent. Il a de la messagerie Gandi active, donc toute intervention DNS doit laisser les MX et
+  le TXT SPF intacts.
 
 ## Development
 

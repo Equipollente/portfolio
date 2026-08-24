@@ -5,23 +5,28 @@
 // Spécifié par deux nœuds Figma : 60:992 (accueil) et 166:475 (autres pages).
 
 import Nav from 'ux-design-system/components/Nav.astro';
+import { withBase } from 'ux-design-system/lib/url';
 
 const links = [
-  { href: '/projets', label: 'Projets', icon: '/icons/box-plus.svg' },
-  { href: '/how-i-work', label: 'How I work', icon: '/icons/route.svg' },
-  { href: '/about', label: 'About me', icon: '/icons/circle-face.svg' },
-  { href: '/cv', label: 'CV', icon: '/icons/file-text.svg' },
+  { href: withBase('/projets'), label: 'Projets', icon: withBase('/icons/box-plus.svg') },
+  { href: withBase('/how-i-work'), label: 'How I work', icon: withBase('/icons/route.svg') },
+  { href: withBase('/about'), label: 'About me', icon: withBase('/icons/circle-face.svg') },
+  { href: withBase('/cv'), label: 'CV', icon: withBase('/icons/file-text.svg') },
 ];
 
+// Astro.url.pathname porte le préfixe de déploiement, et les liens aussi depuis
+// withBase() : on compare donc l'accueil à withBase('/') et non à '/'. Sans ça,
+// l'accueil ne se reconnaît pas et propose un retour vers lui-même.
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isHome = path === '/';
+const accueil = withBase('/').replace(/\/$/, '') || '/';
+const isHome = path === accueil;
 
 // Sur l'accueil, l'avatar disparaît — il n'y a pas à proposer un retour vers la
 // page où l'on est. Et comme « / » ne figure pas dans les liens, aucun onglet
 // n'y est actif : c'est bien ce que montre le design, la HP n'est pas un item.
 const home = isHome
   ? undefined
-  : { href: '/', src: '/images/avatar-judith.png', alt: 'Accueil' };
+  : { href: withBase('/'), src: withBase('/images/avatar-judith.png'), alt: 'Accueil' };
 ---
 
 <header class="header">
@@ -31,7 +36,7 @@ const home = isHome
     links={links}
     current={path}
     home={home}
-    action={{ label: "Let's chat", icon: '/icons/mail-edit.svg' }}
+    action={{ label: "Let's chat", icon: withBase('/icons/mail-edit.svg') }}
   />
 </header>
 
