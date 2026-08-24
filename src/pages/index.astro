@@ -1,6 +1,35 @@
 ---
-// Coquille — les sections viendront s'empiler dans le <slot> du layout.
+// L'accueil. Les sections viennent du système et ne savent rien de ce site :
+// c'est ici que tombent le visage, les textes et la destination du bouton.
+// Maquettes Figma : 45:388 (desktop) et 142:1193 (mobile).
+
 import SiteLayout from '../site/layouts/SiteLayout.astro';
+import Intro from 'ux-design-system/components/Intro.astro';
+import { withBase } from 'ux-design-system/lib/url';
+
+// Textes repris mot pour mot du nœud Figma 209:2348.
+const intro = {
+  avatar: { src: withBase('/images/avatar-judith.png'), alt: 'Judith Heckmann' },
+  greeting: "Hello, I'm Judith",
+  headline:
+    'I design inclusive digital product experiences in a collaborative continuous discovery loop',
+  description: 'From user insights to business impact. Outcomes are what I design for',
+  // L'ancre est pendante tant que la liste d'études de cas n'est pas là : c'est
+  // elle qui devra porter id="projets". La flèche coude du bouton dit « descends
+  // dans la page » — le jour où rien ne suit, c'est le bouton qui ment.
+  action: { label: 'Some projects I worked on', href: '#projets' },
+};
 ---
 
-<SiteLayout title="Judith Heckmann — Product designer" description="Portfolio UX de Judith Heckmann : projets, méthode de travail et CV." />
+<SiteLayout
+  title="Judith Heckmann — Product designer"
+  description="Portfolio UX de Judith Heckmann : projets, méthode de travail et CV."
+>
+  <Intro
+    avatar={intro.avatar}
+    greeting={intro.greeting}
+    headline={intro.headline}
+    description={intro.description}
+    action={intro.action}
+  />
+</SiteLayout>

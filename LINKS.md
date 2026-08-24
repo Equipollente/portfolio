@@ -22,8 +22,8 @@ Deux points de départ, tous deux sur la page Templates.
 
 | Page | URL prévue | Nœud | Statut d'intégration |
 | --- | --- | --- | --- |
-| HP (desktop) | `/` | [`45-388`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=45-388) | Coquille — header seul |
-| HP (mobile) | `/` | [`142-1193`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=142-1193) | Coquille — header seul |
+| HP (desktop) | `/` | [`45-388`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=45-388) | Header + intro — reste la liste d'études de cas |
+| HP (mobile) | `/` | [`142-1193`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=142-1193) | Header + intro — reste la liste d'études de cas |
 | Projets | `/projets` | [`166-453`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=166-453) | Coquille vide |
 | How I work | `/how-i-work` | [`166-327`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=166-327) | Coquille vide |
 | About me | `/about` | [`166-579`](https://www.figma.com/design/uQ5j90wu2MJSvzsN3Oc0pT/UX-design-system?node-id=166-579) | Coquille vide |
@@ -31,6 +31,9 @@ Deux points de départ, tous deux sur la page Templates.
 
 Les prototypes des pages Projets / How I work / About / CV n'ont pas encore de point de départ dans
 Figma.
+
+Le bouton de l'intro pointe sur `#projets`, une ancre encore pendante : c'est la liste d'études de
+cas qui devra la porter quand elle arrivera sur la HP.
 
 ## Le Nav en situation
 
