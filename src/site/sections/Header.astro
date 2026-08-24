@@ -1,0 +1,47 @@
+---
+// Header du portfolio — une composition, pas un composant de système : il rend
+// la barre collante et fournit au Nav du design system ce que celui-ci ignore,
+// à savoir les pages du site et celle où l'on se trouve.
+// Spécifié par deux nœuds Figma : 60:992 (accueil) et 166:475 (autres pages).
+
+import Nav from 'ux-design-system/components/Nav.astro';
+
+const links = [
+  { href: '/projets', label: 'Projets', icon: '/icons/box-plus.svg' },
+  { href: '/how-i-work', label: 'How I work', icon: '/icons/route.svg' },
+  { href: '/about', label: 'About me', icon: '/icons/circle-face.svg' },
+  { href: '/cv', label: 'CV', icon: '/icons/file-text.svg' },
+];
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isHome = path === '/';
+
+// Sur l'accueil, l'avatar disparaît — il n'y a pas à proposer un retour vers la
+// page où l'on est. Et comme « / » ne figure pas dans les liens, aucun onglet
+// n'y est actif : c'est bien ce que montre le design, la HP n'est pas un item.
+const home = isHome
+  ? undefined
+  : { href: '/', src: '/images/avatar-judith.png', alt: 'Accueil' };
+---
+
+<header class="header">
+  {/* Sans href, Button rend un <button> : c'est la bonne balise pour ce qui
+      ouvrira une pop-up de contact. Reste à câbler. */}
+  <Nav
+    links={links}
+    current={path}
+    home={home}
+    action={{ label: "Let's chat", icon: '/icons/mail-edit.svg' }}
+  />
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    background: var(--color-bg-default);
+  }
+</style>

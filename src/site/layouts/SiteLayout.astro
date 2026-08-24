@@ -1,0 +1,35 @@
+---
+// Le layout des pages du portfolio : la coquille HTML du design system, plus la
+// chrome du site. Les pages n'ont donc rien à savoir du Header — elles donnent un
+// titre et versent leurs sections dans le <slot>.
+//
+// C'est ici que passe la frontière : BaseLayout vient du système et ne connaît
+// aucun site ; ce fichier est au portfolio, et c'est lui qui monte le Header.
+
+import BaseLayout from 'ux-design-system/layouts/BaseLayout.astro';
+import Header from '../sections/Header.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+
+  <main id="contenu">
+    <slot />
+  </main>
+</BaseLayout>
+
+<style>
+  /* Provisoire, le temps que les <main> soient vides : sans hauteur, le header
+     collant flotte sur une page de 0px et le fond s'arrête sous la barre.
+     À retirer dès que la première section arrive. */
+  main:empty {
+    min-height: 50vh;
+  }
+</style>

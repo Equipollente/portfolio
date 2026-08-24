@@ -1,0 +1,5 @@
+# Les pages du portfolio sont encore des coquilles vides. Rien à indexer sous un
+# nom propre tant que le contenu n'est pas là — ces deux lignes sautent le jour
+# où les sections arrivent.
+User-agent: *
+Disallow: /
