@@ -12,13 +12,17 @@ import Header from '../sections/Header.astro';
 interface Props {
   title: string;
   description?: string;
+  /** Faux quand la page monte le Header elle-même. Un seul cas aujourd'hui :
+   *  l'accueil, dont la nav appartient au premier écran que les études de cas
+   *  recouvrent en montant — un header posé ici resterait devant elles. */
+  header?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, header = true } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <Header />
+  {header && <Header />}
 
   <main id="contenu">
     <slot />

@@ -20,10 +20,14 @@ serait plus un composant.
 ## Structure
 
 - `src/site/layouts/SiteLayout.astro` — la coquille du système plus la chrome du site. Les pages
-  passent par là, pas par `BaseLayout` directement.
+  passent par là, pas par `BaseLayout` directement. Sa prop `header={false}` laisse une page monter
+  le `Header` elle-même : l'accueil est le seul cas, et la raison est ci-dessous.
 - `src/site/sections/Header.astro` — la barre collante ; c'est elle qui fournit au `Nav` les pages du
-  site et celle où l'on se trouve.
-- `src/pages/` — `/`, `/projets`, `/how-i-work`, `/about`, `/cv`. Encore des coquilles : les sections
+  site et celle où l'on se trouve. Son `z-index` passe par `--header-z`, que l'accueil remet à `auto`.
+- `src/pages/index.astro` — l'accueil : le premier écran (nav + intro) puis la pile d'études de cas.
+  Sa structure et son `<style>` viennent du gabarit `src/pages/templates/home.astro` du design
+  system, qui reste la référence si le comportement de la pile doit être revu.
+- `src/pages/` — `/projets`, `/how-i-work`, `/about`, `/cv` sont encore des coquilles : les sections
   viendront s'empiler dans le `<slot>` du layout.
 - `public/icons/`, `public/images/` — les assets que le site passe en props au système.
 
@@ -36,7 +40,11 @@ serait plus un composant.
 - Pour la même raison, `Header.astro` compare la page courante à `withBase('/')` et non à `'/'` :
   sous un préfixe, l'accueil ne se reconnaîtrait pas et proposerait un retour vers lui-même.
 - **`public/robots.txt`** interdit toute indexation tant que les pages sont vides. À retirer quand le
-  contenu arrive — sinon le site restera invisible des moteurs sans que rien ne le signale.
+  contenu arrive — sinon le site restera invisible des moteurs sans que rien ne le signale. La pile
+  de la HP ne suffit pas : elle publie trois fois la même étude de démonstration.
+- Un `overflow` (même `auto`) sur un ancêtre de la pile de l'accueil casse `position: sticky` sans
+  erreur ni trace, et la pile redevient une simple liste. Ni `BaseLayout` ni `SiteLayout` n'en posent
+  aujourd'hui — c'est à préserver.
 - Le domaine `equipollente.org` n'est pas branché : voir le README pour les trois gestes qui le
   rebranchent. Il a de la messagerie Gandi active, donc toute intervention DNS doit laisser les MX et
   le TXT SPF intacts.

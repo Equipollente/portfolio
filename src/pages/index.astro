@@ -1,10 +1,25 @@
 ---
 // L'accueil. Les sections viennent du système et ne savent rien de ce site :
-// c'est ici que tombent le visage, les textes et la destination du bouton.
-// Maquettes Figma : 45:388 (desktop) et 142:1193 (mobile).
+// c'est ici que tombent le visage, les textes, les études de cas et leurs images.
+// Maquettes Figma : 45:388 (desktop), 142:1193 (mobile), 222:1168 (la pile).
+//
+// La page est bâtie sur le gabarit du système, src/pages/templates/home.astro :
+// tout ce qu'elle apporte est dans le <style> ci-dessous, sous « le contrat du
+// premier écran », et aucune de ces lignes n'est du JavaScript. Aucun des trois
+// composants n'apprend l'existence des deux autres — le bouton de l'intro et
+// l'onglet « Projets » pointent une ancre, la liste la porte, le navigateur fait
+// le reste.
+//
+// Une chose à assumer : le <header> se retrouve ici *dans* <main>, ce qui lui
+// fait perdre son rôle de repère `banner` (les autres pages le gardent). C'est le
+// prix du premier écran dessiné par Figma, où la nav fait partie de ce que les
+// cartes recouvrent : hors du bloc collant, elle resterait devant elles. Le
+// repère `navigation` du Nav, lui, ne bouge pas.
 
 import SiteLayout from '../site/layouts/SiteLayout.astro';
+import Header from '../site/sections/Header.astro';
 import Intro from 'ux-design-system/components/Intro.astro';
+import CaseStudyList from 'ux-design-system/components/CaseStudyList.astro';
 import { withBase } from 'ux-design-system/lib/url';
 
 // Textes repris mot pour mot du nœud Figma 209:2348.
@@ -14,22 +29,199 @@ const intro = {
   headline:
     'I design inclusive digital product experiences in a collaborative continuous discovery loop',
   description: 'From user insights to business impact. Outcomes are what I design for',
-  // L'ancre est pendante tant que la liste d'études de cas n'est pas là : c'est
-  // elle qui devra porter id="projets". La flèche coude du bouton dit « descends
-  // dans la page » — le jour où rien ne suit, c'est le bouton qui ment.
+  // La flèche coude dit « descends dans la page », et c'est vrai depuis que la
+  // pile porte l'ancre. Même destination que l'onglet « Projets » du Header.
   action: { label: 'Some projects I worked on', href: '#projets' },
 };
+
+// Les trois vignettes de 176:1248, de largeurs différentes — c'est ce qui fait
+// travailler le carrousel. Elles sont servies par ce site, donc withBase().
+const caseStudyImages = [
+  {
+    src: withBase('/images/case-study/rubika-percevoir.jpg'),
+    alt: 'Guide « Percevoir sans lutter » : la page d’ouverture et ses deux principes perceptibles.',
+    width: 822,
+    height: 382,
+  },
+  {
+    src: withBase('/images/case-study/rubika-agir.jpg'),
+    alt: 'Guide « Agir sans difficultés » : les hypothèses de départ et leur vérification.',
+    width: 271,
+    height: 382,
+  },
+  {
+    src: withBase('/images/case-study/rubika-roadmap.jpg'),
+    alt: 'La feuille de route de l’atelier et la liste des participants.',
+    width: 600,
+    height: 382,
+  },
+];
+
+// L'étude de cas de 176:1248, mot pour mot. Pas d'`action` : « Read the story »
+// n'aurait nulle part où mener tant que les pages d'étude n'existent pas, et un
+// bouton qui ne mène nulle part est un mensonge de plus qu'une case vide.
+const rubika = {
+  eyebrow: '2025 - Rubika',
+  title: 'The 4 guides for designing for accessibility',
+  impact: 'Faster deployments — Shared UX language — Roadmap alignment • User trust and satisfaction',
+  tags: ['Hypothesis Testing', 'Co-design Facilitation', 'Journey Prototyping'],
+  images: caseStudyImages,
+};
+
+// Figma ne dessine qu'une seule étude : sa « Case-Study Card2 » (222:831) est une
+// copie de la première — un emplacement, pas un second contenu. Le code fait
+// pareil et répète Rubika.
+//
+// Il ne faut surtout pas inventer ici des missions au nom d'entreprises réelles :
+// cette page est publiée, et rien à l'écran ne distinguerait un remplissage d'une
+// vraie étude de cas. Ajouter une étude, le jour venu, c'est ajouter un objet.
+const caseStudies = [rubika, rubika, rubika];
 ---
 
 <SiteLayout
   title="Judith Heckmann — Product designer"
   description="Portfolio UX de Judith Heckmann : projets, méthode de travail et CV."
+  header={false}
 >
-  <Intro
-    avatar={intro.avatar}
-    greeting={intro.greeting}
-    headline={intro.headline}
-    description={intro.description}
-    action={intro.action}
-  />
+  <div class="home">
+    {/* La pile, et ce qui la porte. Ce bloc borne le collage : c'est lui qui dit
+        où le premier écran cesse de tenir sa place. Sans lui, l'intro resterait
+        collée jusqu'au bas de la page et se peindrait par-dessus tout ce qui
+        suit la pile — un élément positionné passe devant un élément qui ne
+        l'est pas, quel que soit l'ordre du DOM. */}
+    <div class="home-deck">
+      {/* Le premier écran : la nav et l'intro. C'est la couche du dessous de la
+          pile — il tient sa place et les cartes lui passent dessus. Sa hauteur
+          est ce qui fait affleurer la première carte de 50px, et rien d'autre. */}
+      <div class="home-first" id="accueil">
+        {/* Le Header est déjà collé en haut : ici il ne bouge pas, puisque le
+            bloc fait exactement un écran. C'est en mobile qu'il sert. */}
+        <Header />
+
+        <div class="intro-slot">
+          <Intro
+            avatar={intro.avatar}
+            greeting={intro.greeting}
+            headline={intro.headline}
+            description={intro.description}
+            action={intro.action}
+          />
+        </div>
+      </div>
+
+      <CaseStudyList id="projets" covers="accueil" items={caseStudies} label="Études de cas" />
+    </div>
+
+    {/* Le palier qui suit la pile. Vide, et c'est provisoire : il est là pour que
+        la dernière carte ait quelque chose derrière elle plutôt que le bord du
+        document. La première section qui arrivera sur l'accueil — « How I work »,
+        un contact — prendra sa place et lui donnera un contenu. */}
+    <div class="after"></div>
+  </div>
 </SiteLayout>
+
+<style>
+  /* ── Le contrat du premier écran ─────────────────────────────────────────
+     C'est tout ce qu'une page doit savoir de CaseStudyList. Il vit ici et non
+     dans le composant parce que la liste ne peut pas mesurer ce qui la précède —
+     et que le mesurer en JavaScript ferait sauter la carte au chargement. */
+
+  .home {
+    /* Déclaré une seule fois : le premier écran et la pile lisent le même nombre.
+       Figma le pose en itemSpacing (209:2383) ; aucun token ne le porte. */
+    --fold-peek: 50px;
+  }
+
+  /* .home-deck n'a volontairement aucune déclaration, et ce n'est pas un oubli :
+     tout son rôle est d'exister comme bloc, pour servir de repère au collage du
+     premier écran et des cartes. C'est lui qui dit où ce collage s'arrête — au
+     bas de la pile, et non au bas de la page. Lui donner un style le rendrait
+     visible ; il ne doit pas l'être. */
+
+  /* Le premier écran est la couche du dessous : il reste en place, et les cartes
+     lui passent dessus. Comme les couches de cartes sont peintes après lui dans
+     l'ordre du DOM, elles le recouvrent sans qu'aucun z-index soit écrit — d'où
+     --header-z, qui retire au Header celui qu'il porte pour les pages ordinaires.
+     Collé à .home-deck et non à .home : son collage doit cesser avec la pile,
+     sinon il se peindrait par-dessus tout ce qui suit.
+     Une hauteur, et non un plancher : c'est elle qui garantit le liseré de 50px
+     à toute hauteur d'écran. Avec min-height, un contenu un peu grand pousserait
+     le bloc et mangerait le liseré. */
+  .home-first {
+    --header-z: auto;
+
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - var(--fold-peek));
+    height: calc(100svh - var(--fold-peek));
+  }
+
+  /* L'intro prend l'air qui reste, centrée : le mou se répartit au-dessus et
+     au-dessous d'elle. Figma pose 50px sous elle (209:2383), mais Figma ne
+     dessine aucun mou — son premier écran fait exactement la taille de son
+     contenu. Ajouter ce padding en plus du centrage ne ferait que décaler le
+     bloc vers le haut, et il ne tiendrait pas sur une fenêtre basse : l'écart
+     est donc celui du centrage, et rien d'autre.
+     min-height: 0 lève la taille minimale automatique des boîtes flexibles, sans
+     quoi l'intro refuserait de se resserrer sur une fenêtre courte. */
+  .intro-slot {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+    /* `safe` : sous ~650px de fenêtre, l'intro ne tient plus dans son écran moins
+       le liseré. Centrée, elle déborderait des deux côtés et remonterait sur la
+       nav. En alignement sûr, le centrage cède au profit du haut dès que ça
+       déborde : l'intro reste sous la nav et ne dépasse que par le bas, où la
+       carte la recouvre de toute façon. Là où le mot-clé n'est pas connu, on
+       retombe sur le centrage — le comportement d'avant. */
+    justify-content: safe center;
+  }
+
+  .after {
+    min-height: calc(100vh - var(--fold-peek));
+    min-height: calc(100svh - var(--fold-peek));
+  }
+
+  /* Sous ~650px de fenêtre, l'intro (601px avec la nav) ne tient plus dans son
+     écran moins le liseré. C'est le liseré qui gagne — la consigne est qu'il
+     tienne à toute hauteur — donc c'est l'intro qui se resserre : son grand
+     écart interne retombe à space.xl, ce qui lui rend 40px et la fait tenir
+     jusqu'à ~610px de fenêtre. En dessous, elle dépasse par le bas, où la carte
+     la recouvre. */
+  @media (max-height: 650px) {
+    .intro-slot {
+      --intro-gap: var(--space-xl);
+    }
+  }
+
+  /* Sous 768px, la pile redevient une liste : le premier écran cesse d'être une
+     couche et reprend sa place dans le flux, l'intro entière, puis les cartes à
+     la suite. C'est le même point de rupture que celui de CaseStudyList — les
+     deux décrivent la même bascule, chacun de son côté. */
+  @media (max-width: 767px) {
+    /* Le bloc s'efface, au sens propre : `display: contents` le retire de la
+       mise en page sans toucher au DOM, et la nav comme l'intro deviennent des
+       enfants directs de .home-deck. C'est ce qui donne à la nav un repère qui
+       couvre toute la pile, donc un collage qui tient jusqu'au bout — dans le
+       bloc, elle se serait décollée à la fin de l'intro.
+       C'est aussi ce qui laisse l'intro reprendre sa place dans le flux : en
+       mobile elle défile, seule la nav reste. Les propriétés personnalisées, dont
+       --header-z, continuent d'hériter au travers ; elle ne coûte rien ici,
+       puisque les cartes y sont hors de tout positionnement et passent derrière
+       la nav de toute façon. */
+    .home-first {
+      display: contents;
+    }
+
+    .intro-slot {
+      /* Le liseré n'a plus de sens quand rien ne s'empile, mais l'écart que
+         Figma pose entre l'intro et la liste (209:2383), lui, en garde : c'est
+         le même nombre, et sans lui la première carte vient coller au bouton de
+         l'intro. */
+      padding-bottom: var(--fold-peek);
+    }
+  }
+</style>

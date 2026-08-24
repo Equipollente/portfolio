@@ -7,21 +7,30 @@
 import Nav from 'ux-design-system/components/Nav.astro';
 import { withBase } from 'ux-design-system/lib/url';
 
-// Les icônes sont des noms, pas des chemins : le système les inline et les livre
-// avec lui. Seuls les href passent encore par withBase(), eux sont des URLs.
-const links = [
-  { href: withBase('/projets'), label: 'Projets', icon: 'box-plus' as const },
-  { href: withBase('/how-i-work'), label: 'How I work', icon: 'route' as const },
-  { href: withBase('/about'), label: 'About me', icon: 'circle-face-content' as const },
-  { href: withBase('/cv'), label: 'CV', icon: 'file-text' as const },
-];
-
 // Astro.url.pathname porte le préfixe de déploiement, et les liens aussi depuis
 // withBase() : on compare donc l'accueil à withBase('/') et non à '/'. Sans ça,
 // l'accueil ne se reconnaît pas et propose un retour vers lui-même.
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const accueil = withBase('/').replace(/\/$/, '') || '/';
 const isHome = path === accueil;
+
+// Les icônes sont des noms, pas des chemins : le système les inline et les livre
+// avec lui. Seuls les href passent encore par withBase(), eux sont des URLs.
+//
+// « Projets » mène à la pile d'études de cas, qui est sur l'accueil : depuis
+// l'accueil c'est donc une ancre, qui descend dans la page sans la recharger, et
+// depuis ailleurs c'est la page /projets. Même libellé, deux destinations — c'est
+// la seule façon de ne pas faire quitter la page à qui est déjà dessus.
+const links = [
+  {
+    href: isHome ? '#projets' : withBase('/projets'),
+    label: 'Projets',
+    icon: 'box-plus' as const,
+  },
+  { href: withBase('/how-i-work'), label: 'How I work', icon: 'route' as const },
+  { href: withBase('/about'), label: 'About me', icon: 'circle-face-content' as const },
+  { href: withBase('/cv'), label: 'CV', icon: 'file-text' as const },
+];
 
 // Sur l'accueil, l'avatar disparaît — il n'y a pas à proposer un retour vers la
 // page où l'on est. Et comme « / » ne figure pas dans les liens, aucun onglet
@@ -46,7 +55,11 @@ const home = isHome
   .header {
     position: sticky;
     top: 0;
-    z-index: 10;
+    /* Point de surcharge public, comme --btn-px ou --card-height dans le système :
+       la barre passe devant le contenu d'une page ordinaire, mais l'accueil la
+       remet à `auto` pour que les études de cas la recouvrent. Un z-index posé en
+       dur ici gagnerait contre elles — les cartes n'en portent aucun. */
+    z-index: var(--header-z, 10);
     display: flex;
     justify-content: center;
     background: var(--color-bg-default);
