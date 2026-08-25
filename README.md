@@ -27,13 +27,13 @@ Ce qui appartient en propre au portfolio :
 
 ```
 src/site/layouts/SiteLayout.astro   la coquille du système + la chrome du site
-src/site/sections/Header.astro      barre collante ; donne au Nav les pages et la page courante
+src/site/sections/Header.astro      donne au Nav les pages et la page courante ; le collage est au Nav
 src/pages/                          /, /projets, /how-i-work, /about, /cv
-public/icons/ public/images/        les icônes et l'avatar que le Header passe au Nav en props
+public/images/                      l'avatar et les visuels d'étude de cas, passés en props
 ```
 
-Les icônes vivent ici et non dans le système : le `Nav` reçoit ses chemins en props, c'est donc le
-site qui décide quelle icône va sur quel onglet.
+Les icônes, elles, viennent du système : le `Nav` reçoit des **noms** (`icon="route"`), pas des
+chemins. Elles sont inlinées, donc sans URL — et le site n'a rien à servir pour elles.
 
 ## Commandes
 
