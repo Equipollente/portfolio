@@ -10,11 +10,9 @@
 // l'onglet « Projets » pointent une ancre, la liste la porte, le navigateur fait
 // le reste.
 //
-// Une chose à assumer : le <header> se retrouve ici *dans* <main>, ce qui lui
-// fait perdre son rôle de repère `banner` (les autres pages le gardent). C'est le
-// prix du premier écran dessiné par Figma, où la nav fait partie de ce que les
-// cartes recouvrent : hors du bloc collant, elle resterait devant elles. Le
-// repère `navigation` du Nav, lui, ne bouge pas.
+// La barre est montée ici et non par le layout, parce que c'est ce bloc-ci qui
+// borne son collage : une barre posée par le layout resterait collée jusqu'au bas
+// du document, par-dessus tout ce qui suit la pile.
 
 import SiteLayout from '../site/layouts/SiteLayout.astro';
 import Header from '../site/sections/Header.astro';
@@ -90,14 +88,19 @@ const caseStudies = [rubika, rubika, rubika];
         suit la pile — un élément positionné passe devant un élément qui ne
         l'est pas, quel que soit l'ordre du DOM. */}
     <div class="home-deck">
-      {/* Le premier écran : la nav et l'intro. C'est la couche du dessous de la
-          pile — il tient sa place et les cartes lui passent dessus. Sa hauteur
-          est ce qui fait affleurer la première carte de 50px, et rien d'autre. */}
-      <div class="home-first" id="accueil">
-        {/* Le Header est déjà collé en haut : ici il ne bouge pas, puisque le
-            bloc fait exactement un écran. C'est en mobile qu'il sert. */}
-        <Header />
+      {/* La barre est hors du premier écran, et il faut les deux raisons pour
+          comprendre pourquoi : un élément collé crée un contexte d'empilement,
+          donc aucun z-index posé à l'intérieur du premier écran ne la ferait
+          passer devant les cartes ; et CaseStudyList rend ce bloc inerte dès
+          qu'une carte le recouvre, ce qui sortirait ses onglets du clavier. Elle
+          reste dans le flux, et sa hauteur est un token — nav.height — que le bloc
+          ci-dessous lit sans avoir à la mesurer. */}
+      <Header />
 
+      {/* Le premier écran : l'intro. C'est la couche du dessous de la pile — il
+          tient sa place et les cartes lui passent dessus. Sa hauteur est ce qui
+          fait affleurer la première carte de 50px, et rien d'autre. */}
+      <div class="home-first" id="accueil">
         <div class="intro-slot">
           <Intro
             avatar={intro.avatar}
@@ -132,31 +135,45 @@ const caseStudies = [rubika, rubika, rubika];
     --fold-peek: 50px;
   }
 
+  /* --nav-height n'est pas déclarée ici, seulement lue : c'est le token
+     nav.height, qui vient de Figma en deux valeurs — 88, et 72 en mode Mobile.
+     Une page cale son premier écran sous la barre sans rien savoir de ce qui la
+     compose. */
+
   /* .home-deck n'a volontairement aucune déclaration, et ce n'est pas un oubli :
-     tout son rôle est d'exister comme bloc, pour servir de repère au collage du
-     premier écran et des cartes. C'est lui qui dit où ce collage s'arrête — au
-     bas de la pile, et non au bas de la page. Lui donner un style le rendrait
-     visible ; il ne doit pas l'être. */
+     tout son rôle est d'exister comme bloc, pour servir de repère au collage de
+     la barre, du premier écran et des cartes. C'est lui qui dit où ce collage
+     s'arrête — au bas de la pile, et non au bas de la page. Lui donner un style
+     le rendrait visible ; il ne doit pas l'être. */
 
   /* Le premier écran est la couche du dessous : il reste en place, et les cartes
      lui passent dessus. Comme les couches de cartes sont peintes après lui dans
-     l'ordre du DOM, elles le recouvrent sans qu'aucun z-index soit écrit — d'où
-     --header-z, qui retire au Header celui qu'il porte pour les pages ordinaires.
+     l'ordre du DOM, elles le recouvrent sans qu'aucun z-index soit écrit.
      Collé à .home-deck et non à .home : son collage doit cesser avec la pile,
      sinon il se peindrait par-dessus tout ce qui suit.
      Une hauteur, et non un plancher : c'est elle qui garantit le liseré de 50px
      à toute hauteur d'écran. Avec min-height, un contenu un peu grand pousserait
      le bloc et mangerait le liseré. */
   .home-first {
-    --header-z: auto;
-
     position: sticky;
-    top: 0;
+    /* Sous la barre, et non sous le haut de la fenêtre : sans quoi l'intro
+       glisserait derrière elle pendant les cent premiers pixels, avant que le
+       masquage ne s'enclenche. */
+    top: var(--nav-height);
     display: flex;
     flex-direction: column;
-    height: calc(100vh - var(--fold-peek));
-    height: calc(100svh - var(--fold-peek));
+    /* La barre reste dans le flux — un élément collé garde sa place — donc le
+       premier écran fait toujours 100svh − 50px en tout, barre comprise : le
+       liseré ne bouge pas d'un pixel. */
+    height: calc(100vh - var(--fold-peek) - var(--nav-height));
+    height: calc(100svh - var(--fold-peek) - var(--nav-height));
   }
+
+  /* La nav n'a plus de règle ici : elle porte son propre collage, par sa prop
+     sticky, et le même à toutes les largeurs. Il n'y a plus de relais à passer
+     entre desktop et mobile, ni d'ordre d'empilement déduit du positionnement des
+     couches — la barre écrit son rang, une fois, et il vaut des deux côtés du
+     point de rupture. */
 
   /* L'intro prend l'air qui reste, centrée : le mou se répartit au-dessus et
      au-dessous d'elle. Figma pose 50px sous elle (209:2383), mais Figma ne
@@ -202,18 +219,14 @@ const caseStudies = [rubika, rubika, rubika];
      la suite. C'est le même point de rupture que celui de CaseStudyList — les
      deux décrivent la même bascule, chacun de son côté. */
   @media (max-width: 767px) {
-    /* Le bloc s'efface, au sens propre : `display: contents` le retire de la
-       mise en page sans toucher au DOM, et la nav comme l'intro deviennent des
-       enfants directs de .home-deck. C'est ce qui donne à la nav un repère qui
-       couvre toute la pile, donc un collage qui tient jusqu'au bout — dans le
-       bloc, elle se serait décollée à la fin de l'intro.
-       C'est aussi ce qui laisse l'intro reprendre sa place dans le flux : en
-       mobile elle défile, seule la nav reste. Les propriétés personnalisées, dont
-       --header-z, continuent d'hériter au travers ; elle ne coûte rien ici,
-       puisque les cartes y sont hors de tout positionnement et passent derrière
-       la nav de toute façon. */
+    /* La barre étant sortie du bloc, il n'y a plus rien à en libérer : il suffit
+       qu'il cesse d'être une couche. `static` et non `display: contents` — resté
+       collé, il se peindrait par-dessus les cartes, qui sont ici hors de tout
+       positionnement. L'intro reprend donc sa place dans le flux et défile ;
+       seule la nav reste, et elle y reste de la même façon qu'ailleurs. */
     .home-first {
-      display: contents;
+      position: static;
+      height: auto;
     }
 
     .intro-slot {

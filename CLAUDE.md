@@ -22,8 +22,10 @@ serait plus un composant.
 - `src/site/layouts/SiteLayout.astro` — la coquille du système plus la chrome du site. Les pages
   passent par là, pas par `BaseLayout` directement. Sa prop `header={false}` laisse une page monter
   le `Header` elle-même : l'accueil est le seul cas, et la raison est ci-dessous.
-- `src/site/sections/Header.astro` — la barre collante ; c'est elle qui fournit au `Nav` les pages du
-  site et celle où l'on se trouve. Son `z-index` passe par `--header-z`, que l'accueil remet à `auto`.
+- `src/site/sections/Header.astro` — une composition, pas une barre : elle fournit au `Nav` les pages
+  du site et celle où l'on se trouve, et rien de plus. Le collage, l'effacement au défilement et le
+  seul `z-index` du système appartiennent au `Nav`, par sa prop `sticky`. Ce fichier **ne rend aucune
+  balise à lui** : la raison est ci-dessous.
 - `src/pages/index.astro` — l'accueil : le premier écran (nav + intro) puis la pile d'études de cas.
   Sa structure et son `<style>` viennent du gabarit `src/pages/templates/home.astro` du design
   system, qui reste la référence si le comportement de la pile doit être revu.
@@ -42,6 +44,15 @@ serait plus un composant.
 - **`public/robots.txt`** interdit toute indexation tant que les pages sont vides. À retirer quand le
   contenu arrive — sinon le site restera invisible des moteurs sans que rien ne le signale. La pile
   de la HP ne suffit pas : elle publie trois fois la même étude de démonstration.
+- **Envelopper le `Nav` dans une balise casse son collage, sans erreur ni trace.** Un élément collé
+  ne voyage pas hors de son parent : un wrapper de la hauteur de la barre lui rend une boîte où elle
+  ne peut plus bouger, et l'effacement l'en fait sortir en laissant le cadre sur place. C'est ce qui a
+  coûté au site son repère ARIA `banner` — aucune page n'en porte plus ; le repère `navigation` du
+  `Nav`, lui, reste. Pour la même raison, la barre doit rester **hors** du bloc qu'elle surplombe :
+  sur l'accueil elle est au-dessus de `.home-first`, jamais dedans.
+- **La barre n'a pas de fond**, et c'est le système qui le dit : ce qui flotte au-dessus du contenu,
+  ce sont trois objets déjà opaques. Ne pas lui en rendre un ici — si le fond doit revenir, cela se
+  décide dans Figma et s'ouvre dans le dépôt du système, pas dans une feuille de ce site.
 - Un `overflow` (même `auto`) sur un ancêtre de la pile de l'accueil casse `position: sticky` sans
   erreur ni trace, et la pile redevient une simple liste. Ni `BaseLayout` ni `SiteLayout` n'en posent
   aujourd'hui — c'est à préserver.

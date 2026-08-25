@@ -1,8 +1,14 @@
 ---
-// Header du portfolio — une composition, pas un composant de système : il rend
-// la barre collante et fournit au Nav du design system ce que celui-ci ignore,
-// à savoir les pages du site et celle où l'on se trouve.
+// Header du portfolio — une composition, pas un composant de système : il fournit
+// au Nav du design system ce que celui-ci ignore, à savoir les pages du site et
+// celle où l'on se trouve. Le collage, lui, ne vit plus ici : la barre le porte
+// elle-même par sa prop `sticky`, et écrit son propre rang d'empilement.
 // Spécifié par deux nœuds Figma : 60:992 (accueil) et 166:475 (autres pages).
+//
+// Ce fichier ne rend donc aucune balise à lui : un élément qui envelopperait le
+// Nav lui rendrait une boîte de sa propre hauteur, et un élément collé ne peut
+// pas voyager hors de son parent — la barre resterait sur place. C'est le prix
+// du repère `banner`, qu'aucune page ne porte plus.
 
 import Nav from 'ux-design-system/components/Nav.astro';
 import { withBase } from 'ux-design-system/lib/url';
@@ -40,28 +46,12 @@ const home = isHome
   : { href: withBase('/'), src: withBase('/images/avatar-judith.png'), alt: 'Accueil' };
 ---
 
-<header class="header">
-  {/* Sans href, Button rend un <button> : c'est la bonne balise pour ce qui
-      ouvrira une pop-up de contact. Reste à câbler. */}
-  <Nav
-    links={links}
-    current={path}
-    home={home}
-    action={{ label: "Let's chat", icon: 'mail-edit' }}
-  />
-</header>
-
-<style>
-  .header {
-    position: sticky;
-    top: 0;
-    /* Point de surcharge public, comme --btn-px ou --card-height dans le système :
-       la barre passe devant le contenu d'une page ordinaire, mais l'accueil la
-       remet à `auto` pour que les études de cas la recouvrent. Un z-index posé en
-       dur ici gagnerait contre elles — les cartes n'en portent aucun. */
-    z-index: var(--header-z, 10);
-    display: flex;
-    justify-content: center;
-    background: var(--color-bg-default);
-  }
-</style>
+{/* Sans href, Button rend un <button> : c'est la bonne balise pour ce qui
+    ouvrira une pop-up de contact. Reste à câbler. */}
+<Nav
+  sticky
+  links={links}
+  current={path}
+  home={home}
+  action={{ label: "Let's chat", icon: 'mail-edit' }}
+/>
