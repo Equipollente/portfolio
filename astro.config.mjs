@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+import mdx from '@astrojs/mdx';
+
 // https://astro.build/config
 export default defineConfig({
   // Tant que le site n'a pas de domaine propre, GitHub Pages le sert sous le nom
@@ -9,6 +11,7 @@ export default defineConfig({
   // avec le domaine dedans. Aucun autre code ne bouge — withBase() redevient une
   // fonction identité dès que `base` disparaît.
   site: 'https://equipollente.github.io',
+
   base: '/portfolio',
 
   vite: {
@@ -18,4 +21,6 @@ export default defineConfig({
       noExternal: ['ux-design-system'],
     },
   },
+
+  integrations: [mdx()],
 });
