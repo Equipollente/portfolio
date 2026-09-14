@@ -22,7 +22,9 @@ import { withBase } from 'ux-design-system/lib/url';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import decathlonUserStory from '../assets/case-studies/decathlon-account-vision/context-user-story.jpg';
-import decathlonDecide from '../assets/case-studies/decathlon-account-vision/personalization-decide.png';
+// Recadrée sur l'écran : l'export du mockup portait une marge transparente et
+// une ombre, qui faisaient un cadre dans le cadre de la vignette.
+import decathlonSizeGuideScreen from '../assets/case-studies/decathlon-account-vision/card-size-guide-screen.png';
 import decathlonSizeGuide from '../assets/case-studies/decathlon-account-vision/context-size-guide.png';
 
 // Textes repris mot pour mot du nœud Figma 209:2348.
@@ -104,7 +106,7 @@ const decathlon = {
       'Slide « User story 1 » : l’écran Morphology de My Account et les trois manières dont la vision a été construite.',
     ),
     thumbnail(
-      decathlonDecide,
+      decathlonSizeGuideScreen,
       'Guide des tailles : la case à cocher pour enregistrer âge, taille et poids dans le compte Decathlon.',
     ),
     thumbnail(
