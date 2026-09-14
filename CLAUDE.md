@@ -71,7 +71,8 @@ ajouter sans raison : ce dossier est une zone de transit, pas une deuxième bibl
   sous un préfixe, l'accueil ne se reconnaîtrait pas et proposerait un retour vers lui-même.
 - **`public/robots.txt`** interdit toute indexation tant que les pages sont vides. À retirer quand le
   contenu arrive — sinon le site restera invisible des moteurs sans que rien ne le signale. La pile
-  de la HP ne suffit pas : elle publie trois fois la même étude de démonstration.
+  de la HP porte deux vraies études (Rubika, Decathlon), mais `/projets`, `/how-i-work`, `/about` et
+  `/cv` sont encore des coquilles : l'indexation reste une décision à prendre, pas un oubli.
 - **Envelopper le `Nav` dans une balise casse son collage, sans erreur ni trace.** Un élément collé
   ne voyage pas hors de son parent : un wrapper de la hauteur de la barre lui rend une boîte où elle
   ne peut plus bouger, et l'effacement l'en fait sortir en laissant le cadre sur place. C'est ce qui a
