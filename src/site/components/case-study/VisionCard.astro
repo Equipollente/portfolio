@@ -1,0 +1,76 @@
+---
+// VisionCard — un pilier de la vision d'expérience : une illustration, le nom du
+// pilier, ce qu'il promet, et la voix d'un utilisateur qui le confirme. Figma
+// Folio2026 : Cards/UXVision (114:2870).
+
+import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import SectionHeading from './SectionHeading.astro';
+import QuoteCard from './QuoteCard.astro';
+
+interface Props extends HTMLAttributes<'article'> {
+  illustration: ImageMetadata;
+  eyebrow: string;
+  title: string;
+  quote?: string;
+  headingLevel?: 3 | 4;
+}
+
+const {
+  illustration,
+  eyebrow,
+  title,
+  quote,
+  headingLevel = 3,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<article class:list={['vision-card', className]} {...rest}>
+  <Image src={illustration} alt="" class="illustration" />
+  <div class="content">
+    <SectionHeading
+      eyebrow={eyebrow}
+      title={title}
+      size="subtitle"
+      eyebrowTone="accent"
+      headingLevel={headingLevel}
+    />
+    {quote && <QuoteCard quote={quote} />}
+  </div>
+</article>
+
+<style>
+  .vision-card {
+    /* La boîte de l'illustration dans Figma : 195 × 225. Les dessins n'ont pas
+       tous ce format ; ils y sont contenus, pas étirés. */
+    --vision-illustration-ratio: 195 / 225;
+    /* Et sa hauteur tenue : la boîte de Figma, rapportée à la carte, laisse
+       les dessins autour de 160 px de haut. */
+    --vision-illustration-height: 10rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-default);
+    box-shadow: var(--shadow-md);
+  }
+
+  .illustration {
+    align-self: center;
+    inline-size: auto;
+    max-inline-size: 100%;
+    block-size: var(--vision-illustration-height);
+    object-fit: contain;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+</style>

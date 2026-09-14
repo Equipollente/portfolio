@@ -1,0 +1,36 @@
+---
+// Panel — un bloc d'appui dans une section : un sous-titre, un texte, puis ce
+// qui le prouve (une image, une liste). Figma Folio2026 : Realite (131:3976).
+
+import type { HTMLAttributes } from 'astro/types';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props extends HTMLAttributes<'div'> {
+  title: string;
+  text?: string;
+  headingLevel?: 3 | 4;
+}
+
+const { title, text, headingLevel = 3, class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['panel', className]} {...rest}>
+  <SectionHeading title={title} size="subtitle" headingLevel={headingLevel} />
+  {text && <p class="text">{text}</p>}
+  <slot />
+</div>
+
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+  }
+
+  .text {
+    margin: 0;
+    font-size: var(--font-size-body-lg);
+    line-height: var(--font-line-height-body);
+  }
+</style>

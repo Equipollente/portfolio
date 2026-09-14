@@ -1,0 +1,82 @@
+---
+// QuoteWall — un panneau de citations en colonnes, sous un titre : ce dont
+// l'équipe était convaincue. Figma Folio2026 : Convictions (131:3870).
+//
+// Figma borne le panneau en hauteur et rogne les cartes du bas : le mur se lit
+// comme « il y en avait d'autres ». La coupe est gardée sur grand écran, et levée
+// sous 768 px, où une seule colonne rognée cacherait des citations entières.
+// C'est la seule brique qui pose un overflow, et sur elle-même uniquement.
+
+import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
+import SectionHeading from './SectionHeading.astro';
+import QuoteCard from './QuoteCard.astro';
+
+interface Props extends HTMLAttributes<'div'> {
+  title: string;
+  quotes: { quote: string; author?: string; avatar?: ImageMetadata }[];
+  headingLevel?: 3 | 4;
+}
+
+const { title, quotes, headingLevel = 3, class: className, ...rest } = Astro.props;
+
+// Deux piles explicites, remplies en alternance : l'ordre de lecture reste celui
+// du contenu (1, 2, 3…), et chaque carte tombe dans la colonne où Figma la pose.
+// Des colonnes CSS rééquilibreraient les hauteurs et déplaceraient les cartes.
+const columns = [quotes.filter((_, i) => i % 2 === 0), quotes.filter((_, i) => i % 2 === 1)];
+---
+
+<div class:list={['quote-wall', className]} {...rest}>
+  <SectionHeading title={title} size="subtitle" headingLevel={headingLevel} />
+  <div class="columns">
+    {
+      columns.map((column) => (
+        <div class="column">
+          {column.map((q) => (
+            <QuoteCard {...q} />
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .quote-wall {
+    /* La hauteur du panneau de Figma : 795 px. */
+    --quote-wall-height: 49.6875rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    max-block-size: var(--quote-wall-height);
+    overflow: hidden;
+    padding: var(--space-xl) var(--space-xl) 0;
+    border-radius: var(--radius-md);
+    background: var(--color-neutral-100);
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-lg);
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 767px) {
+    .quote-wall {
+      max-block-size: none;
+      padding-block-end: var(--space-xl);
+    }
+
+    .columns {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
