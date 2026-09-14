@@ -1,0 +1,47 @@
+---
+// Le titre d'une étude de cas — Figma Folio2026 88:3073. Partie fixe du layout
+// global : le seul h1 de la page, centré sur la mesure de lecture, souligné d'un
+// filet court.
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<header class="title-block">
+  <h1>{title}</h1>
+</header>
+
+<style>
+  .title-block {
+    /* Le filet de Figma : 120 × 2 px. Aucun token de filet décoratif. */
+    --title-rule-width: 7.5rem;
+    --title-rule-thickness: 2px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    max-inline-size: calc(var(--case-measure) + 2 * var(--case-gutter));
+    margin-inline: auto;
+    padding-block-start: var(--space-layout-48);
+    padding-inline: var(--case-gutter);
+    text-align: center;
+  }
+
+  /* heading/display de Figma : interligne 1.12, sans interlettrage. Le h1 du
+     système prend `snug` ; la maquette de l'étude est serrée. */
+  h1 {
+    margin: 0;
+    line-height: var(--font-line-height-tight);
+  }
+
+  .title-block::after {
+    content: '';
+    inline-size: var(--title-rule-width);
+    block-size: var(--title-rule-thickness);
+    background: var(--color-accent-100);
+  }
+</style>
