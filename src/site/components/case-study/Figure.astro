@@ -1,0 +1,94 @@
+---
+// Figure — une image, éventuellement légendée. Figma Folio2026 : Image
+// (114:3596), Img (114:2834), img + caption (123:3728).
+//
+// `frame` dit comment l'image est posée : `elevated` arrondie avec l'ombre md
+// (les visuels de contexte), `rounded` arrondie sans ombre, `plain` telle quelle
+// — pour un rendu exporté de Figma qui porte déjà son cadre.
+// L'image passe par <Image> d'astro:assets : optimisée, dimensionnée, et servie
+// sous le préfixe de déploiement sans withBase().
+
+import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props extends HTMLAttributes<'figure'> {
+  src: ImageMetadata;
+  /** Obligatoire : décrire ce que l'image montre, pas ce qu'elle est. */
+  alt: string;
+  title?: string;
+  caption?: string;
+  frame?: 'elevated' | 'rounded' | 'plain';
+  /** La largeur maximale servie, en px. */
+  width?: number;
+}
+
+const {
+  src,
+  alt,
+  title,
+  caption,
+  frame = 'elevated',
+  width,
+  class: className,
+  ...rest
+} = Astro.props;
+
+if (alt === undefined) throw new Error('Figure : `alt` est obligatoire.');
+---
+
+<figure class:list={['figure', className]} {...rest}>
+  <Image src={src} alt={alt} width={width} class:list={['media', `frame-${frame}`]} />
+  {
+    (title || caption) && (
+      <figcaption>
+        {title && <span class="caption-title">{title}</span>}
+        {caption && <span class="caption-text">{caption}</span>}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .figure {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .media {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .frame-elevated {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+
+  .frame-rounded {
+    border-radius: var(--radius-md);
+  }
+
+  /* caption/title et caption/default de Figma. */
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: 0;
+    padding-block: var(--space-sm);
+    color: var(--color-text-default);
+    text-align: center;
+  }
+
+  .caption-title {
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-body-lg);
+    line-height: var(--font-line-height-body);
+  }
+
+  .caption-text {
+    font-size: var(--font-size-ui);
+    line-height: var(--font-line-height-snug);
+  }
+</style>
