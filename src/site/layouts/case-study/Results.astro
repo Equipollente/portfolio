@@ -1,0 +1,23 @@
+---
+// Results — ce que l'étude a produit. Figma Folio2026 182:12599 (case-study-impact).
+//
+// En-tête à gauche, puis une rangée resserrée (944 px) : des MetricCard et des
+// ExecutiveCard. Le sur-titre vaut « Outcomes » par défaut. Toute étude en a
+// exactement une, et c'est la dernière section — voir required-sections.ts.
+
+import CaseStudySection, { type Props as SectionProps } from './CaseStudySection.astro';
+
+type Props = Omit<SectionProps, 'align' | 'label' | 'eyebrow'> & {
+  eyebrow?: string;
+  title: string;
+};
+
+const { eyebrow = 'Outcomes', ...props } = Astro.props;
+if (!props.title) {
+  throw new Error('Results : `title` est obligatoire.');
+}
+---
+
+<CaseStudySection {...props} eyebrow={eyebrow} align="start" width={props.width ?? 'narrow'}>
+  <slot />
+</CaseStudySection>
