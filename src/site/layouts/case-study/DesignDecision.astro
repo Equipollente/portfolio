@@ -1,0 +1,21 @@
+---
+// DesignDecision — une décision d'interface, montrée par ses écrans. Figma
+// Folio2026 182:12443, 182:12452, 182:12535 (« case study design decisions »).
+//
+// En-tête centré sur la mesure de lecture, puis le contenu enrichi — le plus
+// souvent une ScreenGallery. Le sur-titre nomme le pilier d'expérience que la
+// décision sert. Toute étude en a au moins une — voir required-sections.ts.
+
+import CaseStudySection, { type Props as SectionProps } from './CaseStudySection.astro';
+
+type Props = Omit<SectionProps, 'align' | 'label'> & { eyebrow: string; title: string };
+
+const props = Astro.props;
+if (!props.title || !props.eyebrow) {
+  throw new Error('DesignDecision : `eyebrow` et `title` sont obligatoires.');
+}
+---
+
+<CaseStudySection {...props} align="center">
+  <slot />
+</CaseStudySection>

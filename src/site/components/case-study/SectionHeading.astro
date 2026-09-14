@@ -1,0 +1,112 @@
+---
+// SectionHeading — un sur-titre et un titre. Figma Folio2026 : section-heading
+// (88:3081) et section-subheading (96:3277).
+//
+// Trois cas, un seul composant :
+// - sur-titre + titre : un <hgroup>, le titre porte le rang, le sur-titre est son
+//   contexte ;
+// - titre seul : le titre, sans enveloppe ;
+// - sur-titre seul (« Intro », 82:2859) : c'est alors lui qui est le titre de la
+//   section, avec le style du sur-titre.
+//
+// Composant du site en attendant de remonter dans le design system : il n'y a
+// dans le système ni titre de section, ni style de sur-titre en dehors du h6.
+
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  eyebrow?: string;
+  title?: string;
+  /** Le rang du titre — ou du sur-titre quand il est seul. */
+  headingLevel?: 2 | 3 | 4;
+  /** La taille du titre, indépendante de son rang. `title` = heading/title,
+   *  `subtitle` = heading/subtitle. */
+  size?: 'title' | 'subtitle';
+  /** Posé sur l'élément titre, pour qu'une section s'en serve d'aria-labelledby. */
+  headingId?: string;
+  /** Couleur du sur-titre : muted par défaut, accent dans une carte UX Vision. */
+  eyebrowTone?: 'muted' | 'accent';
+}
+
+const {
+  eyebrow,
+  title,
+  headingLevel = 2,
+  size = 'title',
+  headingId,
+  eyebrowTone = 'muted',
+  class: className,
+  ...rest
+} = Astro.props;
+
+if (!eyebrow && !title) {
+  throw new Error('SectionHeading : il faut au moins un `eyebrow` ou un `title`.');
+}
+
+const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
+const eyebrowClass = ['eyebrow', `eyebrow-${eyebrowTone}`];
+---
+
+{
+  title && eyebrow ? (
+    <hgroup class:list={['heading', className]} {...rest}>
+      <p class:list={eyebrowClass}>{eyebrow}</p>
+      <Heading id={headingId} class:list={['title', `title-${size}`]}>{title}</Heading>
+    </hgroup>
+  ) : title ? (
+    <Heading id={headingId} class:list={['title', `title-${size}`, className]} {...rest}>
+      {title}
+    </Heading>
+  ) : (
+    <Heading id={headingId} class:list={[...eyebrowClass, className]} {...rest}>
+      {eyebrow}
+    </Heading>
+  )
+}
+
+<style>
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin: 0;
+  }
+
+  /* Le style « eyebrow » de Figma : Inter semibold 13 px, capitales, interlettrage
+     8 %. Les mêmes réglages que le h6 du système, mais la graisse est posée ici :
+     le h6 hérite du bold des titres. */
+  .eyebrow {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-body-sm);
+    line-height: var(--font-line-height-snug);
+    letter-spacing: var(--font-letter-spacing-wider);
+    text-transform: uppercase;
+  }
+
+  .eyebrow-muted {
+    color: var(--color-text-muted);
+  }
+
+  .eyebrow-accent {
+    color: var(--color-text-accent);
+  }
+
+  .title {
+    margin: 0;
+    color: var(--color-text-default);
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--font-line-height-tight);
+    letter-spacing: var(--font-letter-spacing-tight);
+  }
+
+  .title-title {
+    font-size: var(--font-size-title);
+  }
+
+  .title-subtitle {
+    font-size: var(--font-size-subtitle);
+  }
+</style>

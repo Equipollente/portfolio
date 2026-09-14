@@ -1,0 +1,181 @@
+---
+// CaseStudySection — le layout de base de toute section variable d'une étude.
+//
+// Ce n'est pas une coquille de page : c'est un « partial UI template », ce que la
+// doc Astro appelle aussi un layout (basics/layouts). UxDecision, DesignDecision,
+// Results et MediaSection l'imbriquent en fixant ses réglages ; le corps MDX ne
+// l'utilise jamais directement.
+//
+// Le motif commun des sections de la maquette (121:3650, 182:12443, 182:12599…) :
+// un en-tête — sur-titre, titre, texte — puis un contenu enrichi. L'en-tête passe
+// en props et non en slot nommé : dans un MDX, un slot nommé suivi de texte se
+// fait envelopper de <p> imprévus. Le <slot /> par défaut ne reçoit donc que des
+// briques, qui portent chacune leurs propres styles.
+//
+// Aucun `overflow` ici, ni sur la bande : un ancêtre en overflow casserait le
+// collage du Nav (CLAUDE.md). Les briques qui ont besoin de rogner le font sur
+// elles-mêmes.
+
+import type { HTMLAttributes } from 'astro/types';
+import SectionHeading from '../../components/case-study/SectionHeading.astro';
+
+export interface Props extends HTMLAttributes<'section'> {
+  eyebrow?: string;
+  title?: string;
+  /** Le texte sous le titre. Un tableau donne une ligne par entrée, sans
+   *  espacement — c'est ce que la maquette dessine (« Rejected / Instead /
+   *  Trade »). */
+  lead?: string | string[];
+  headingLevel?: 2 | 3;
+  /** `start` : en-tête à gauche sur toute la largeur. `center` : en-tête centré
+   *  sur la mesure de lecture. */
+  align?: 'start' | 'center';
+  /** La largeur du contenu enrichi. */
+  width?: 'wide' | 'narrow';
+  /** `band` : le contenu enrichi est posé sur une bande bg.surface pleine
+   *  largeur (134:4924). */
+  body?: 'plain' | 'band';
+  /** Le nom accessible de la section quand elle n'a pas de titre. */
+  label?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  headingLevel = 2,
+  align = 'start',
+  width = 'wide',
+  body = 'plain',
+  label,
+  id,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const hasHeading = Boolean(eyebrow || title);
+if (!hasHeading && !label) {
+  throw new Error('CaseStudySection : une section sans titre doit avoir un `label`.');
+}
+
+// Un id de titre stable, dérivé de l'id de section s'il existe, sinon du titre.
+const slug = (id ?? title ?? eyebrow ?? label ?? 'section')
+  .toLowerCase()
+  .normalize('NFD')
+  .replace(/[̀-ͯ]/g, '')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/(^-|-$)/g, '');
+const headingId = `${slug}-titre`;
+const leads = lead === undefined ? [] : Array.isArray(lead) ? lead : [lead];
+const hasBody = Astro.slots.has('default');
+---
+
+<section
+  id={id}
+  class:list={['section', `align-${align}`, className]}
+  aria-labelledby={hasHeading ? headingId : undefined}
+  aria-label={hasHeading ? undefined : label}
+  {...rest}
+>
+  {
+    hasHeading && (
+      <header class="head">
+        <SectionHeading
+          eyebrow={eyebrow}
+          title={title}
+          headingLevel={headingLevel}
+          headingId={headingId}
+        />
+        {leads.length > 0 && (
+          <div class="lead">
+            {leads.map((line) => (
+              <p>{line}</p>
+            ))}
+          </div>
+        )}
+      </header>
+    )
+  }
+  {
+    hasBody && (
+      <div class:list={['body', `body-${body}`]}>
+        <div class:list={['body-inner', `width-${width}`]}>
+          <slot />
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--space-layout-64);
+  }
+
+  /* L'écart entre l'en-tête et le contenu : 64 px à gauche, 32 px centré. */
+  .align-start {
+    gap: var(--space-layout-64);
+  }
+
+  .align-center {
+    gap: var(--space-2xl);
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    inline-size: 100%;
+    margin-inline: auto;
+    padding-inline: var(--case-gutter);
+  }
+
+  .align-start .head {
+    max-inline-size: calc(var(--case-width) + 2 * var(--case-gutter));
+  }
+
+  .align-center .head {
+    max-inline-size: calc(var(--case-measure) + 2 * var(--case-gutter));
+  }
+
+  .lead {
+    font-size: var(--font-size-body-lg);
+    line-height: var(--font-line-height-body);
+  }
+
+  .lead p {
+    margin: 0;
+  }
+
+  .body {
+    padding-inline: var(--case-gutter);
+  }
+
+  /* La bande pleine largeur : elle reprend le rythme vertical d'une section, et
+     l'en-tête garde le fond de la page. La section ne rembourre donc plus son
+     bas — c'est la bande qui porte l'air. */
+  .body-band {
+    padding-block: var(--space-layout-64);
+    background: var(--color-bg-surface);
+  }
+
+  .section:has(> .body-band) {
+    padding-block-end: 0;
+  }
+
+  .body-inner {
+    display: grid;
+    gap: var(--space-xl);
+    margin-inline: auto;
+  }
+
+  .width-wide {
+    max-inline-size: var(--case-width);
+  }
+
+  .width-narrow {
+    max-inline-size: var(--case-narrow);
+  }
+</style>

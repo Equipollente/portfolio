@@ -1,0 +1,25 @@
+---
+// Une page par étude de cas de la collection `caseStudies`. Le frontmatter de
+// l'entrée remplit les parties fixes du layout ; le corps MDX, rendu par
+// <Content />, verse les sections dans son <slot>.
+// Doc : guides/content-collections → Generating Routes from Content.
+
+import { getCollection, render } from 'astro:content';
+import CaseStudyLayout from '../../site/layouts/CaseStudyLayout.astro';
+import { assertRequiredSections } from '../../site/layouts/case-study/required-sections';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('caseStudies');
+  return entries.map((entry) => {
+    assertRequiredSections(entry.id, entry.body);
+    return { params: { slug: entry.id }, props: { entry } };
+  });
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<CaseStudyLayout {...entry.data}>
+  <Content />
+</CaseStudyLayout>

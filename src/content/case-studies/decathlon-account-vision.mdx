@@ -1,0 +1,229 @@
+---
+# Figma Folio2026 · case-study-page 79:928. Textes repris mot pour mot de la maquette.
+title: "Driving Decathlon's unique account adoption through a shared experience vision anchored in user reality"
+description: "How a shared experience vision, built on existing research, led Decathlon's services to adopt one unique account."
+lang: en
+intro:
+  heading: Intro
+  paragraphs:
+    - "105 apps and services, each managing customer data its own way. Member is the platform meant to end that: one account, one login for the whole Decathlon ecosystem."
+    - "When I joined in 2022, both were deploying. E-commerce was resisting. The legacy tools were at end of life, membership on the way.\nThe leaders wanted something concrete: users validating the value they had written.\nI asked the other question: what does the account do for the person logging in?"
+    - "The vision came from there — technical stakes turned into experience questions, designed as user journeys, tested.\nE-commerce, the strongest holdout, integrated."
+metadata:
+  - label: Rôle
+    tags: [Lead Product Designer, UX researcher]
+  - label: livrables
+    tags: ["2022", Product Vision, Prototype HI-FI]
+  - label: equipe
+    tags: [2 Product Designers, Group Product Manaeer, Devs]
+executive:
+  lang: fr
+  items:
+    - icon: alert-triangle
+      tone: highlight
+      title: Problems
+      bullets:
+        - "73% des utilisateurs ignorent que leur compte ouvre toutes les apps."
+        - Les services ne comprennent pas la valeur pour eux
+    - icon: edit
+      tone: accent
+      title: Solutions
+      bullets:
+        - Définir quels problèmes utilisateur le compte unique vient résoudre
+        - Construire une vision de l’expérience du compte intégrée dans celles de l’écosystème
+    - icon: trending-up
+      tone: section
+      title: Résultats
+      bullets:
+        - Déployé sur le e-commerce
+        - Satisfaction client + 2,1 pts
+        - Une vision de l’expérience du compte portée par 3 parcours stratégique
+---
+
+import MediaSection from '../../site/layouts/case-study/MediaSection.astro';
+import UxDecision from '../../site/layouts/case-study/UxDecision.astro';
+import DesignDecision from '../../site/layouts/case-study/DesignDecision.astro';
+import Results from '../../site/layouts/case-study/Results.astro';
+import Figure from '../../site/components/case-study/Figure.astro';
+import Split from '../../site/components/case-study/Split.astro';
+import QuoteWall from '../../site/components/case-study/QuoteWall.astro';
+import Panel from '../../site/components/case-study/Panel.astro';
+import CardGrid from '../../site/components/case-study/CardGrid.astro';
+import VisionCard from '../../site/components/case-study/VisionCard.astro';
+import ScreenGallery from '../../site/components/case-study/ScreenGallery.astro';
+import MetricCard from '../../site/components/case-study/MetricCard.astro';
+import ExecutiveCard from '../../site/components/case-study/ExecutiveCard.astro';
+
+import userStory from '../../assets/case-studies/decathlon-account-vision/context-user-story.jpg';
+import vision from '../../assets/case-studies/decathlon-account-vision/context-vision.jpg';
+import sizeGuide from '../../assets/case-studies/decathlon-account-vision/context-size-guide.png';
+import researchJourney from '../../assets/case-studies/decathlon-account-vision/research-journey.png';
+import avatarProductDesigner from '../../assets/case-studies/decathlon-account-vision/avatar-product-designer.png';
+import avatarProductManager from '../../assets/case-studies/decathlon-account-vision/avatar-product-manager.png';
+import avatarDeveloppeur from '../../assets/case-studies/decathlon-account-vision/avatar-developpeur.png';
+import avatarBusinessLeader from '../../assets/case-studies/decathlon-account-vision/avatar-business-leader.png';
+import visionSecurity from '../../assets/case-studies/decathlon-account-vision/vision-security.png';
+import visionPersonalization from '../../assets/case-studies/decathlon-account-vision/vision-personalization.png';
+import visionEcosystem from '../../assets/case-studies/decathlon-account-vision/vision-ecosystem.png';
+import securityWeight from '../../assets/case-studies/decathlon-account-vision/security-weight.png';
+import securityDownload from '../../assets/case-studies/decathlon-account-vision/security-download.png';
+import securityMyData from '../../assets/case-studies/decathlon-account-vision/security-my-data.png';
+import personalizationNeed from '../../assets/case-studies/decathlon-account-vision/personalization-need.png';
+import personalizationDecide from '../../assets/case-studies/decathlon-account-vision/personalization-decide.png';
+import personalizationManage from '../../assets/case-studies/decathlon-account-vision/personalization-manage.png';
+import personalizationUnderstand from '../../assets/case-studies/decathlon-account-vision/personalization-understand.png';
+import ecosystemBelong from '../../assets/case-studies/decathlon-account-vision/ecosystem-belong.png';
+import ecosystemExplore from '../../assets/case-studies/decathlon-account-vision/ecosystem-explore.png';
+import ecosystemDiscover from '../../assets/case-studies/decathlon-account-vision/ecosystem-discover.png';
+
+{/* 114:3611 et 114:2831 — les visuels de contexte. */}
+<MediaSection label="The vision, as presented to stakeholders">
+  <Figure
+    src={userStory}
+    alt="Slide « User story 1: Using morphological data to enhance the customer experience », with the Morphology screen of My Account and the three ways the vision was built: strategy, co-design, user research."
+  />
+  <Figure
+    src={vision}
+    alt="Slide « The vision »: Marie, 46, a hiker choosing the size of a fleece jacket, and the size guide screen that compares her entry with her last weigh-in."
+  />
+  <Figure
+    src={sizeGuide}
+    frame="plain"
+    alt="Three steps of the size guide, tilted: the consent checkbox to save age, size and weight, then the weigh-in comparison."
+  />
+</MediaSection>
+
+{/* 121:3650 */}
+<UxDecision
+  eyebrow="decision 1"
+  title="Turned the team's certainties into hypotheses research could break"
+  lead={[
+    'Rejected: present the written strategy, collect approval.',
+    'Instead: a four-step workshop with product leaders analyzing existing research into four hypotheses.',
+    'Trade: fresh discovery given up, rebuilt from every study Decathlon already had.',
+  ]}
+>
+  <Split lang="fr">
+    <QuoteWall
+      title="Ce dont l’équipe étaient convaincues"
+      quotes={[
+        { quote: 'Parce que plus nos interfaces seront évidentes moins les utilisateurs auront à apprendre à les utiliser', author: 'Product Designer', avatar: avatarProductDesigner },
+        { quote: 'Pour être plus efficace en interne, éviter de réinventer la roue à chaque nouvelle feature', author: 'Developpeur', avatar: avatarDeveloppeur },
+        { quote: "Pour sécuriser l'accès au compte, et garantir la sécurité à nos utilisateurs.", author: 'Product Manager', avatar: avatarProductManager },
+        { quote: "Parce que nous souhaitons diversifier nos sources de volume d'affaire", author: 'Buisness Leader', avatar: avatarBusinessLeader },
+        { quote: "Pour sécuriser l'accès au compte, et garantir la sécurité à nos utilisateurs.", author: 'Product Manager', avatar: avatarProductManager },
+        { quote: "Parce que nous souhaitons diversifier nos sources de volume d'affaire", author: 'Buisness Leader', avatar: avatarBusinessLeader },
+        { quote: "Pour sécuriser l'accès au compte, et garantir la sécurité à nos utilisateurs.", author: 'Product Manager', avatar: avatarProductManager },
+      ]}
+    />
+    <Panel
+      title="User journey & heuristics, ont consolidé ces convictions en hypothèses ancrées dans le réel"
+      text="J’ai cartographié les insights de la recherche au sein du parcours du compte en agrégeant les convictions"
+    >
+      <Figure
+        src={researchJourney}
+        frame="plain"
+        alt="Extrait de la cartographie du parcours, étape Discovery : l'hypothèse 3 « J'ai envie de découvrir », un insight clé et le chiffre de 89 % d'utilisateurs pour qui l'environnement correspond à l'identité."
+      />
+    </Panel>
+  </Split>
+</UxDecision>
+
+{/* 134:4628 + 134:4924 */}
+<UxDecision
+  eyebrow="decision 2"
+  title="Turned research findings into experience pillars, not a features list"
+  lead="Rejected: ship four hypotheses as a features backlog. Instead: three pillars holding multiple hypotheses at once, so users felt one account, not four fixes stitched together. Trade: speed given up, coherence protected."
+  body="band"
+>
+  <CardGrid>
+    <VisionCard
+      illustration={visionSecurity}
+      eyebrow="Security and transparency"
+      title="Giving our users control over their data and helping them understand how it is used at Decathlon."
+      quote="I want to know how and why you deduct recommendations, and I want to be in control of it."
+    />
+    <VisionCard
+      illustration={visionPersonalization}
+      eyebrow="Personalization of journeys"
+      title="Improving customer and athlete journeys all over the ecosystem, thanks to data personalization of experiences."
+      quote="Now I don't have to enter my measurements every time, it just knows."
+    />
+    <VisionCard
+      illustration={visionEcosystem}
+      eyebrow="Meaning of the Decathlon Ecosystem"
+      title="Clarifying the meaning of the Decathlon ecosystem for our users, so they promote it further."
+      quote="I see the Decathlon logo, same design everywhere. I trust it."
+    />
+  </CardGrid>
+</UxDecision>
+
+{/* 182:12443 */}
+<DesignDecision
+  eyebrow="Security & Transparency"
+  title="The control panel that made data rights feel like a feature"
+  lead="Four direct actions — use, modify, delete, download my data. This is where Security and transparency stops being strategy and becomes an interface. The single clearest artifact in the case study, the literal screen behind the turning point."
+>
+  <ScreenGallery
+    label="My account data screens"
+    items={[
+      { src: securityWeight, alt: 'Weight details screen: the saved weight, and the history of entries with a delete action on each.' },
+      { src: securityDownload, alt: 'Download my data screen: a new request button and an explanation of the right to portability.' },
+      { src: securityMyData, alt: 'My data screen: use of my data, modify my data, delete my account, download my data.' },
+    ]}
+  />
+</DesignDecision>
+
+{/* 182:12452 */}
+<DesignDecision
+  eyebrow="Personalization of journeys"
+  title="The account experience embedded in Decathlon”s services to simplify and really personalized user journey. "
+  lead="A checkbox in a size guide, morphology data resurfacing in My Account, a bike recommendation that already knows the fit. The account isn't a separate destination. It's embedded in the services themselves, so the journey gets simpler and the personalization gets real."
+>
+  <ScreenGallery
+    label="The size guide journey, from need to understanding"
+    items={[
+      { src: personalizationNeed, title: 'Need', caption: 'A jacket, a size to find.', alt: 'Product page of a women’s mountain walking fleece jacket, with the size selector and the size guide link.' },
+      { src: personalizationDecide, title: 'Decide', caption: 'The opt-in sits inside the size guide, not after it.', alt: 'Size guide with age, height and weight, and a checkbox to save them in the Decathlon account.' },
+      { src: personalizationManage, title: 'Manage', caption: 'Measurements saved once, visible and editable anytime.', alt: 'Morphology screen in My account showing the saved height and weight.' },
+      { src: personalizationUnderstand, title: 'Understand', caption: 'In plain words: saved once, useful from here on.caption content', alt: 'Screen explaining in plain words how saved measurements are used.' },
+    ]}
+  />
+</DesignDecision>
+
+{/* 182:12535 */}
+<DesignDecision
+  eyebrow="Meaning of the Decathlon Ecosystem"
+  title="The account that turns 105 apps into one Decathlon"
+  lead="A personalized nudge from a recent purchase, a full list of connected services, and one account at the center of everything. This is where fragmentation stops being felt and starts being one recognizable ecosystem."
+>
+  <ScreenGallery
+    label="The Decathlon ecosystem inside the account"
+    items={[
+      { src: ecosystemBelong, title: 'Belong', caption: 'One account, every Decathlon service orbiting around it.', alt: '« All Decathlon in one account » screen, with an illustration of the services around the account.' },
+      { src: ecosystemExplore, title: 'Explore', caption: 'Every service, listed, filterable, all in one place.', alt: '« Tout Decathlon dans un seul compte » screen listing the connected services, with a filter.' },
+      { src: ecosystemDiscover, title: 'Discover', caption: 'One purchase, one relevant app suggested.', alt: 'Welcome screen recommending the Decathlon Outdoor app after the purchase of a bike.' },
+    ]}
+  />
+</DesignDecision>
+
+{/* 182:12599 — la preuve de la carte métrique (« Evidence: 5/8 participants… »)
+    est le texte par défaut du composant Figma, pas une donnée de l'étude : elle
+    n'est pas reprise. */}
+<Results
+  title="The vision gave leadership evidence the strategy never had."
+  lead="three pillars shipped into Decathlon Login, Log'InStore, My Account, and reusable design system components other teams build on."
+>
+  <CardGrid gap="lg">
+    <MetricCard metric="3.4" label="NPS scor" delta="+2.1 points" />
+    <ExecutiveCard
+      icon="trending-up"
+      tone="section"
+      title="Unique Account adopted"
+      bullets={[
+        "The login runs on all 15 apps in France, Decathlon's largest market.",
+        'E-commerce deployed solutions uin the 6 month',
+      ]}
+    />
+  </CardGrid>
+</Results>

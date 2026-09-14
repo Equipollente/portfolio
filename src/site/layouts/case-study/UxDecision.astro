@@ -1,0 +1,22 @@
+---
+// UxDecision — une décision de démarche : ce qui a été écarté, ce qui a été fait
+// à la place, ce que ça a coûté. Figma Folio2026 121:3650 (decision 1) et
+// 134:4628 + 134:4924 (decision 2).
+//
+// En-tête à gauche sur toute la largeur. Le contenu enrichi est libre : un mur de
+// citations et un panneau (decision 1), une bande de cartes UX Vision (decision 2).
+// Toute étude en a au moins une — voir required-sections.ts.
+
+import CaseStudySection, { type Props as SectionProps } from './CaseStudySection.astro';
+
+type Props = Omit<SectionProps, 'align' | 'label'> & { eyebrow: string; title: string };
+
+const props = Astro.props;
+if (!props.title || !props.eyebrow) {
+  throw new Error('UxDecision : `eyebrow` et `title` sont obligatoires.');
+}
+---
+
+<CaseStudySection {...props} align="start">
+  <slot />
+</CaseStudySection>

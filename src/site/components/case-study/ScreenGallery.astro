@@ -1,0 +1,98 @@
+---
+// ScreenGallery — des écrans d'interface côte à côte sur un panneau neutre,
+// légendés ou non. Figma Folio2026 : les « showcase » des Design decisions
+// (174:12292, 182:12473, 182:12540).
+//
+// Deux dispositions :
+// - `fit` : les écrans se partagent la largeur (trois mockups, 174:12292) ;
+// - `scroll` : chaque écran garde sa largeur et la bande défile (quatre écrans
+//   qui débordent, 182:12473).
+// Par défaut, jusqu'à trois écrans tiennent, au-delà la bande défile. Sous
+// 768 px, elle défile toujours.
+//
+// Une zone qui défile doit pouvoir être atteinte au clavier (WCAG 2.1.1) : la
+// bande est une région nommée, focalisable.
+
+import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
+import Figure from './Figure.astro';
+
+interface Props extends HTMLAttributes<'div'> {
+  /** Nomme la région pour les technologies d'assistance. */
+  label: string;
+  items: { src: ImageMetadata; alt: string; title?: string; caption?: string }[];
+  layout?: 'fit' | 'scroll';
+}
+
+const { label, items, layout, class: className, ...rest } = Astro.props;
+const mode = layout ?? (items.length > 3 ? 'scroll' : 'fit');
+---
+
+<div
+  class:list={['gallery', `gallery-${mode}`, className]}
+  role="region"
+  aria-label={label}
+  tabindex="0"
+  {...rest}
+>
+  <ul class="track">
+    {
+      items.map((item) => (
+        <li>
+          <Figure {...item} frame="plain" />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .gallery {
+    /* La largeur d'un écran quand la bande défile : 312 px dans Figma. */
+    --screen-width: 19.5rem;
+
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    background: var(--color-neutral-100);
+    scroll-snap-type: x proximity;
+  }
+
+  .track {
+    display: flex;
+    gap: var(--space-2xl);
+    inline-size: max-content;
+    min-inline-size: 100%;
+    margin: 0;
+    padding: var(--space-2xl);
+    list-style: none;
+  }
+
+  li {
+    scroll-snap-align: start;
+  }
+
+  .gallery-fit li {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
+  .gallery-fit .track {
+    inline-size: auto;
+  }
+
+  .gallery-scroll li {
+    flex: none;
+    inline-size: var(--screen-width);
+  }
+
+  @media (max-width: 767px) {
+    .gallery-fit .track {
+      inline-size: max-content;
+    }
+
+    .gallery-fit li {
+      flex: none;
+      inline-size: var(--screen-width);
+    }
+  }
+</style>

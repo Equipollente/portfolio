@@ -1,0 +1,74 @@
+---
+// L'intro d'une étude de cas — Figma Folio2026 94:3102. Partie fixe du layout
+// global : le récit court à gauche, les faits (rôle, livrables, équipe) à droite.
+// Les deux colonnes passent l'une sous l'autre dès qu'elles ne tiennent plus.
+
+import SectionHeading from '../../components/case-study/SectionHeading.astro';
+import MetadataList from '../../components/case-study/MetadataList.astro';
+
+interface Props {
+  heading: string;
+  paragraphs: string[];
+  metadata: { label: string; tags: string[] }[];
+}
+
+const { heading, paragraphs, metadata } = Astro.props;
+---
+
+<section class="intro" aria-labelledby="case-intro">
+  <div class="story">
+    <SectionHeading eyebrow={heading} headingId="case-intro" />
+    {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  </div>
+  <MetadataList items={metadata} class="facts" />
+</section>
+
+<style>
+  .intro {
+    /* La colonne minimale et la largeur des faits : 262 px dans Figma. */
+    --intro-column-min: 16.375rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-layout-48);
+    box-sizing: content-box;
+    max-inline-size: calc(var(--case-measure) - 2 * var(--space-layout-64));
+    margin-inline: auto;
+    padding: var(--space-layout-48) var(--space-layout-64);
+  }
+
+  .story {
+    flex: 1 0 0;
+    min-inline-size: var(--intro-column-min);
+    font-size: var(--font-size-body-lg);
+    line-height: var(--font-line-height-body);
+  }
+
+  .story p {
+    margin: 0;
+    /* Les retours à la ligne du contenu restent des retours à la ligne. */
+    white-space: pre-line;
+  }
+
+  /* Figma sépare les blocs du récit par une ligne vide. */
+  .story p + p {
+    margin-block-start: 1lh;
+  }
+
+  .intro :global(.facts) {
+    flex: 1 0 0;
+    max-inline-size: var(--intro-column-min);
+  }
+
+  @media (max-width: 767px) {
+    .intro {
+      padding-inline: var(--case-gutter);
+    }
+
+    .intro :global(.facts) {
+      max-inline-size: none;
+      padding-inline: 0;
+    }
+  }
+</style>

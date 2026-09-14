@@ -1,0 +1,17 @@
+---
+// MediaSection — des visuels de contexte, sans décision à porter : slides de
+// restitution, vues d'ensemble. Figma Folio2026 114:3611 et 114:2831.
+//
+// L'en-tête est facultatif ; sans titre, la section doit recevoir un `label`
+// qui la nomme pour les technologies d'assistance. Facultative dans une étude.
+
+import CaseStudySection, { type Props as SectionProps } from './CaseStudySection.astro';
+
+type Props = Omit<SectionProps, 'align'>;
+
+const props = Astro.props;
+---
+
+<CaseStudySection {...props} align={props.title ? 'center' : 'start'}>
+  <slot />
+</CaseStudySection>

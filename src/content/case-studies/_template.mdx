@@ -1,0 +1,63 @@
+---
+# Gabarit d'étude de cas — à copier, jamais publié (le `_` l'exclut de la collection).
+#
+# 1. Copier ce fichier sous src/content/case-studies/<slug>.mdx : le nom du fichier
+#    devient l'URL, /projets/<slug>.
+# 2. Mettre les images dans src/assets/case-studies/<slug>/.
+# 3. Remplir le frontmatter : ce sont les parties fixes du layout (titre, intro,
+#    executive). Le schéma est dans src/content.config.ts ; un champ manquant fait
+#    échouer le build.
+# 4. Écrire les sections dans le corps. La règle : au moins une <UxDecision>, au
+#    moins une <DesignDecision>, exactement une <Results>, en dernier. Une
+#    <MediaSection> est facultative.
+title: ""
+description: ""
+lang: en
+intro:
+  heading: Intro
+  paragraphs:
+    - ""
+metadata:
+  - label: Rôle
+    tags: [""]
+executive:
+  items:
+    - { icon: alert-triangle, tone: highlight, title: Problems, bullets: [""] }
+    - { icon: edit, tone: accent, title: Solutions, bullets: [""] }
+    - { icon: trending-up, tone: section, title: Results, bullets: [""] }
+---
+
+{/* Les layouts de section. */}
+import MediaSection from '../../site/layouts/case-study/MediaSection.astro';
+import UxDecision from '../../site/layouts/case-study/UxDecision.astro';
+import DesignDecision from '../../site/layouts/case-study/DesignDecision.astro';
+import Results from '../../site/layouts/case-study/Results.astro';
+
+{/* Les briques à poser dans une section. */}
+import Figure from '../../site/components/case-study/Figure.astro';
+import Split from '../../site/components/case-study/Split.astro';
+import QuoteWall from '../../site/components/case-study/QuoteWall.astro';
+import QuoteCard from '../../site/components/case-study/QuoteCard.astro';
+import Panel from '../../site/components/case-study/Panel.astro';
+import CardGrid from '../../site/components/case-study/CardGrid.astro';
+import VisionCard from '../../site/components/case-study/VisionCard.astro';
+import ScreenGallery from '../../site/components/case-study/ScreenGallery.astro';
+import MetricCard from '../../site/components/case-study/MetricCard.astro';
+import ExecutiveCard from '../../site/components/case-study/ExecutiveCard.astro';
+
+{/* Les images : import cover from '../../assets/case-studies/<slug>/cover.png'; */}
+
+<UxDecision eyebrow="decision 1" title="" lead={['Rejected: …', 'Instead: …', 'Trade: …']}>
+  {/* Split, QuoteWall, Panel, CardGrid de VisionCard… */}
+</UxDecision>
+
+<DesignDecision eyebrow="" title="" lead="">
+  {/* <ScreenGallery label="" items={[{ src, alt, title, caption }]} /> */}
+</DesignDecision>
+
+<Results title="" lead="">
+  <CardGrid gap="lg">
+    {/* <MetricCard metric="" label="" delta="" /> */}
+    {/* <ExecutiveCard icon="trending-up" tone="section" title="" bullets={['']} /> */}
+  </CardGrid>
+</Results>

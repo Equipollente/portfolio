@@ -1,0 +1,37 @@
+---
+// Split — deux blocs côte à côte, qui passent l'un sous l'autre dès qu'ils ne
+// tiennent plus. Figma Folio2026 : Content-enriched (131:4024), qui range le mur
+// de convictions à gauche et le panneau de réalité à droite.
+//
+// Le premier bloc garde sa largeur (490 px dans Figma), le second prend le reste.
+
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['split', className]} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .split {
+    /* La largeur du premier bloc : 490 px. */
+    --split-start: 30.625rem;
+
+    display: grid;
+    grid-template-columns: minmax(0, var(--split-start)) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-2xl);
+  }
+
+  /* Le système ne coupe qu'à 768. Entre 768 et 1024, le panneau de droite ne
+     garderait que ~180 px à côté des 490 du mur : la rangée se replie plus tôt. */
+  @media (max-width: 1023px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -33,6 +33,34 @@ serait plus un composant.
   viendront s'empiler dans le `<slot>` du layout.
 - `public/icons/`, `public/images/` — les assets que le site passe en props au système.
 
+## Études de cas
+
+Toutes les études suivent le même gabarit, bâti sur les layouts imbriqués d'Astro.
+
+- `src/content.config.ts` — la collection `caseStudies` (fichiers `src/content/case-studies/*.mdx`).
+  Le frontmatter porte les **parties fixes**, validées par le schéma : titre, intro, métadonnées,
+  executive.
+- `src/pages/projets/[slug].astro` — une page par entrée ; le nom du fichier MDX devient l'URL.
+- `src/site/layouts/CaseStudyLayout.astro` — imbrique `SiteLayout`, monte toujours Title → Intro →
+  Executive (`src/site/sections/case-study/`), puis verse le corps MDX dans son `<slot>`. Il déclare
+  les mesures communes : `--case-width`, `--case-measure`, `--case-narrow`, `--case-gutter`.
+- `src/site/layouts/case-study/` — les **layouts de section** que le corps MDX imbrique :
+  `UxDecision`, `DesignDecision`, `Results`, `MediaSection`, tous bâtis sur `CaseStudySection`.
+- `src/site/components/case-study/` — les briques à poser dans une section (`Figure`,
+  `ScreenGallery`, `QuoteWall`, `VisionCard`, `MetricCard`, `ExecutiveCard`…).
+
+**La règle** : au moins une `<UxDecision>`, au moins une `<DesignDecision>`, exactement une
+`<Results>`. `required-sections.ts` la vérifie au build et le fait échouer sinon.
+
+**Ajouter une étude** : copier `src/content/case-studies/_template.mdx` (le `_` l'exclut de la
+collection), mettre les images dans `src/assets/case-studies/<slug>/`, remplir. Les images passent par
+`astro:assets` et n'ont donc pas besoin de `withBase()`.
+
+**Écart assumé à la règle du projet** : `src/site/components/case-study/` contient des composants qui
+devraient vivre dans le design system (titre de section, carte executive, citation, carte métrique…).
+Ils sont en tokens seulement, en attendant d'y remonter — la liste est dans `LINKS.md`. Ne pas en
+ajouter sans raison : ce dossier est une zone de transit, pas une deuxième bibliothèque.
+
 ## Ce qui casse silencieusement
 
 - Le site est servi sous `/portfolio/`, pas à la racine d'un domaine. **Tout chemin absolu passe par

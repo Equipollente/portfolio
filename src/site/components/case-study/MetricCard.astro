@@ -1,0 +1,68 @@
+---
+// MetricCard — un chiffre et ce qu'il mesure. Figma Folio2026 : Cards/Metric
+// Highlight (134:4240).
+//
+// `delta` et `evidence` sont facultatifs : un chiffre sans preuve reste un
+// chiffre, mais une preuve inventée ne doit jamais remplir la case.
+
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  metric: string;
+  label: string;
+  delta?: string;
+  evidence?: string;
+}
+
+const { metric, label, delta, evidence, class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['metric-card', className]} {...rest}>
+  <p class="metric">{metric}</p>
+  <p class="label">{label}</p>
+  {delta && <p class="delta">{delta}</p>}
+  {evidence && <p class="evidence">{evidence}</p>}
+</div>
+
+<style>
+  .metric-card {
+    /* Insights/metric de Figma : 56 px. Aucun cran de la rampe typographique ne
+       monte si haut — display s'arrête à 42. */
+    --metric-size: 3.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-default);
+    box-shadow: var(--shadow-md);
+  }
+
+  p {
+    margin: 0;
+    line-height: var(--font-line-height-body);
+  }
+
+  .metric {
+    color: var(--color-text-accent);
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--metric-size);
+    line-height: var(--font-line-height-snug);
+  }
+
+  .label {
+    font-size: var(--font-size-body-lg);
+  }
+
+  .delta {
+    color: var(--color-feedback-success);
+    font-size: var(--font-size-body);
+  }
+
+  .evidence {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-body-sm);
+  }
+</style>

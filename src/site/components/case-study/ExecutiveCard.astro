@@ -1,0 +1,90 @@
+---
+// ExecutiveCard — une carte de synthèse : une pastille d'icône, un titre, des
+// puces. Figma Folio2026 : executive-card (97:127). Sert dans l'executive d'une
+// étude (problèmes, solutions, résultats) et dans sa section Résultats.
+//
+// L'icône exportée de Figma portait sa pastille en couleur brute. La pastille est
+// donc dessinée ici, en tokens, et le glyphe est un SVG en currentColor importé
+// comme composant (doc Astro : SVG components).
+
+import type { HTMLAttributes } from 'astro/types';
+import SectionHeading from './SectionHeading.astro';
+import BulletList from './BulletList.astro';
+import AlertTriangle from './icons/alert-triangle.svg';
+import Edit from './icons/edit.svg';
+import TrendingUp from './icons/trending-up.svg';
+import type { ExecutiveIcon, ExecutiveTone } from './executive';
+
+interface Props extends HTMLAttributes<'article'> {
+  icon: ExecutiveIcon;
+  /** La couleur de la pastille, par rôle. */
+  tone?: ExecutiveTone;
+  title: string;
+  bullets: string[];
+  headingLevel?: 2 | 3 | 4;
+}
+
+const {
+  icon,
+  tone = 'accent',
+  title,
+  bullets,
+  headingLevel = 3,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const glyphs = { 'alert-triangle': AlertTriangle, edit: Edit, 'trending-up': TrendingUp };
+const Glyph = glyphs[icon];
+if (!Glyph) throw new Error(`ExecutiveCard : icône inconnue « ${icon} ».`);
+---
+
+<article class:list={['executive-card', className]} {...rest}>
+  <span class:list={['badge', `badge-${tone}`]}>
+    <Glyph aria-hidden="true" focusable="false" />
+  </span>
+  <SectionHeading title={title} size="subtitle" headingLevel={headingLevel} />
+  <BulletList items={bullets} />
+</article>
+
+<style>
+  .executive-card {
+    /* La pastille de Figma : 100 px. Aucun token de taille d'illustration. */
+    --executive-badge-size: 6.25rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-2xl);
+    border: var(--border-width-default) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-default);
+    box-shadow: var(--shadow-md);
+  }
+
+  .badge {
+    display: grid;
+    place-items: center;
+    inline-size: var(--executive-badge-size);
+    block-size: var(--executive-badge-size);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-default);
+  }
+
+  .badge :global(svg) {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .badge-highlight {
+    background: var(--color-highlight-200);
+  }
+
+  .badge-accent {
+    background: var(--color-accent-100);
+  }
+
+  .badge-section {
+    background: var(--color-bg-section);
+  }
+</style>

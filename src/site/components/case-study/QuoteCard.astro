@@ -1,0 +1,81 @@
+---
+// QuoteCard — une citation : de quelqu'un de l'équipe, avec son visage et son
+// rôle (Cards/Stakeholder Quote, 557:1375), ou d'un utilisateur, seule
+// (Cards/User Quote, 136:1015). Figma Folio2026.
+//
+// Un <figure> : la citation est le <blockquote>, l'attribution le <figcaption>.
+// L'avatar est décoratif — le rôle est écrit juste dessous.
+
+import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props extends HTMLAttributes<'figure'> {
+  quote: string;
+  author?: string;
+  avatar?: ImageMetadata;
+}
+
+const { quote, author, avatar, class: className, ...rest } = Astro.props;
+---
+
+<figure class:list={['quote-card', className]} {...rest}>
+  {avatar && <Image src={avatar} alt="" class="avatar" width={96} height={96} />}
+  <blockquote>
+    <p>{quote}</p>
+  </blockquote>
+  {author && <figcaption>{author}</figcaption>}
+</figure>
+
+<style>
+  .quote-card {
+    /* L'avatar de Figma : 48 px. Le liseré de la citation : 3 px. Aucun token
+       de taille d'avatar ni de filet décoratif. */
+    --quote-avatar-size: 3rem;
+    --quote-accent-width: 3px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: 0;
+    padding: var(--space-xl);
+    border: var(--border-width-default) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-default);
+  }
+
+  .avatar {
+    inline-size: var(--quote-avatar-size);
+    block-size: var(--quote-avatar-size);
+    border-radius: var(--radius-pill);
+  }
+
+  blockquote {
+    margin: 0;
+    padding-inline-start: var(--space-md);
+    border-inline-start: var(--quote-accent-width) solid var(--color-accent-200);
+  }
+
+  /* body/quote de Figma : Inter medium italique, 17 px. */
+  blockquote p {
+    margin: 0;
+    color: var(--color-text-default);
+    font-style: italic;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-body-lg);
+    line-height: var(--font-line-height-body);
+  }
+
+  /* Le divider de Figma est porté par l'attribution : il n'existe que si elle
+     existe. Le style « users » : Poppins bold, 15 px. */
+  figcaption {
+    margin: 0;
+    padding-block-start: var(--space-md);
+    border-block-start: var(--border-width-default) solid var(--color-border-default);
+    color: var(--color-text-default);
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-body);
+    line-height: var(--font-line-height-snug);
+  }
+</style>

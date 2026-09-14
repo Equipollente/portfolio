@@ -36,6 +36,32 @@ L'ancre `#projets` est portée par la pile d'études de cas de la HP. Deux chose
 de l'intro, et l'onglet « Projets » du menu — mais celui-ci seulement depuis l'accueil ; depuis les
 autres pages, il ouvre `/projets`.
 
+## Études de cas
+
+Les maquettes d'étude de cas vivent dans un autre fichier, **Folio2026** : `Kalny7U7bPBcfPcEaPtxyl`
+<https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026>
+
+| Étude | URL | Nœud | Statut d'intégration |
+| --- | --- | --- | --- |
+| Decathlon — account vision | `/projets/decathlon-account-vision` | [`79-928`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=79-928) | Intégrée, sert de référence au gabarit |
+
+Correspondance entre la maquette et le gabarit (voir `CLAUDE.md` → Études de cas) :
+
+| Nœud Figma | Pièce de code |
+| --- | --- |
+| [`88-3073`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=88-3073) case-study-title | `CaseStudyLayout` → `CaseStudyTitle` (fixe) |
+| [`94-3102`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=94-3102) case-study-intro | `CaseStudyLayout` → `CaseStudyIntro` (fixe) |
+| [`107-175`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=107-175) case-study-executive-section | `CaseStudyLayout` → `CaseStudyExecutive` (fixe) |
+| [`114-3611`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=114-3611), [`114-2831`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=114-2831) visuels de contexte | `MediaSection` + `Figure` |
+| [`121-3650`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=121-3650) decision 1 | `UxDecision` + `Split`, `QuoteWall`, `Panel` |
+| [`134-4628`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=134-4628) + [`134-4924`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=134-4924) decision 2 | `UxDecision body="band"` + `CardGrid`, `VisionCard` |
+| [`182-12443`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=182-12443), [`182-12452`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=182-12452), [`182-12535`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=182-12535) | `DesignDecision` + `ScreenGallery` |
+| [`182-12599`](https://www.figma.com/design/Kalny7U7bPBcfPcEaPtxyl/Folio2026?node-id=182-12599) outcomes | `Results` + `MetricCard`, `ExecutiveCard` |
+
+Composants Figma sans équivalent dans le design system, intégrés côté site en attendant d'y
+remonter : section-heading, section-body-list, casestudy-metadata-list, executive-card,
+Cards/Stakeholder Quote, Cards/User Quote, Cards/UXVision, Cards/Metric Highlight.
+
 ## Le Nav en situation
 
 Le composant est documenté côté design system ; ces deux nœuds montrent ce que le `Header` en fait.

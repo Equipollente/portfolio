@@ -1,0 +1,43 @@
+---
+// CardGrid — une rangée de cartes de même rang, qui se replie en colonnes quand
+// la place manque. Figma Folio2026 : les Content-enriched des cartes UX Vision
+// (134:4929) et des Résultats (182:12606).
+
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  /** L'écart entre cartes : 32 px (UX Vision) ou 64 px (Résultats). */
+  gap?: 'md' | 'lg';
+}
+
+const { gap = 'md', class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['card-grid', `gap-${gap}`, className]} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .card-grid {
+    /* La largeur minimale d'une carte : 239 px dans Figma. */
+    --card-grid-min: 15rem;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--card-grid-min), 100%), 1fr));
+    align-items: start;
+  }
+
+  .gap-md {
+    gap: var(--space-2xl);
+  }
+
+  .gap-lg {
+    gap: var(--space-layout-64);
+  }
+
+  @media (max-width: 767px) {
+    .gap-lg {
+      gap: var(--space-xl);
+    }
+  }
+</style>
