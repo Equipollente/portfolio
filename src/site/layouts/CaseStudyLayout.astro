@@ -1,0 +1,59 @@
+---
+// Le layout global d'une étude de cas — Figma Folio2026 79:928.
+//
+// Il imbrique SiteLayout (coquille + Header) et monte, toujours dans cet ordre,
+// les trois parties que toute étude a : le titre, l'intro, l'executive. Tout ce
+// qui suit est versé dans le <slot> par le corps MDX : des layouts de section
+// (UxDecision, DesignDecision, Results, MediaSection), eux-mêmes imbriqués dans
+// CaseStudySection. C'est le motif « Nesting layouts » de la doc Astro.
+//
+// Il déclare aussi les trois mesures que toutes les sections lisent. Aucun token
+// de conteneur n'existe dans le système : ce sont donc des variables locales,
+// posées une fois ici, et nommées d'après l'objet.
+
+import type { CollectionEntry } from 'astro:content';
+import SiteLayout from './SiteLayout.astro';
+import CaseStudyTitle from '../sections/case-study/CaseStudyTitle.astro';
+import CaseStudyIntro from '../sections/case-study/CaseStudyIntro.astro';
+import CaseStudyExecutive from '../sections/case-study/CaseStudyExecutive.astro';
+
+type Props = CollectionEntry<'caseStudies'>['data'];
+
+const { title, description, lang, intro, metadata, executive } = Astro.props;
+---
+
+<SiteLayout title={`${title} — Judith Heckmann`} description={description}>
+  <article class="case-study" lang={lang}>
+    <CaseStudyTitle title={title} />
+    <CaseStudyIntro heading={intro.heading} paragraphs={intro.paragraphs} metadata={metadata} />
+    <CaseStudyExecutive items={executive.items} lang={executive.lang} />
+    <slot />
+  </article>
+</SiteLayout>
+
+<style>
+  .case-study {
+    /* 1104 px : la largeur de contenu de Figma, 1200 moins deux gouttières de
+       48. C'est la largeur des sections alignées à gauche et des bandes. */
+    --case-width: 69rem;
+    /* 768 px : la mesure de lecture — titre, intro, en-têtes centrés. */
+    --case-measure: 48rem;
+    /* 944 px : la rangée resserrée des Résultats (1200 moins 2 × 128). */
+    --case-narrow: 59rem;
+    /* La gouttière latérale : space.layout.48 comme Figma, resserrée sur
+       téléphone pour ne pas manger l'écran. */
+    --case-gutter: var(--space-layout-48);
+
+    display: flex;
+    flex-direction: column;
+    /* L'itemSpacing de case-study-main. */
+    gap: var(--space-md);
+    padding-block-end: var(--space-layout-64);
+  }
+
+  @media (max-width: 767px) {
+    .case-study {
+      --case-gutter: var(--space-lg);
+    }
+  }
+</style>
